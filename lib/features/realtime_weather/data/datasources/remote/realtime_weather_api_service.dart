@@ -2,6 +2,7 @@ import 'package:retrofit/retrofit.dart';
 import '../../../../../core/constants/constants.dart';
 import 'package:dio/dio.dart';
 import '../../models/realtime_weather.dart';
+part 'realtime_weather_api_service.g.dart';
 
 
 
@@ -15,7 +16,7 @@ abstract class RealtimeWeatherApiService {
 
 
   @GET('/current.json')
-  Future<HttpResponse<List<RealtimeWeatherModel>>> getRealtimeWeather({
+  Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather({
     @Query("apiKey") String ? apiKey,
     @Query("cityName") String ? cityName,
   });
