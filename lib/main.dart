@@ -39,6 +39,9 @@ class _HomeState extends State<Home> {
       print(data.data!.conditionCode.toString());
       print(data.data!.tempC.toString());
       print(data.data!.loactionName.toString());
+      print(data.data!.conditionCode.toString());
+      print(data.data!.conditionIcon.toString());
+      print(data.data!.conditionText.toString());
     });
     super.initState();
   }
