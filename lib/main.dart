@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 import 'package:weather_app/injection_container.dart';
+
+import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
 
 void main() async {
   await initializeDependencies();
@@ -12,13 +15,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Home(sl()),
-    );
+    return ScreenUtilInit(
+        designSize: const Size(393, 851), // PIXEL 5
+        child: MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          home: Home(sl()),
+        ));
   }
 }
 
@@ -32,22 +38,33 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  void initState() {
-    //try fatch here for test :
-    Future.delayed(Duration.zero, () async {
-      final data = await widget._fetchRealtimeWeatherUseCase.call();
-      print(data.data!.conditionCode.toString());
-      print(data.data!.tempC.toString());
-      print(data.data!.loactionName.toString());
-      print(data.data!.conditionCode.toString());
-      print(data.data!.conditionIcon.toString());
-      print(data.data!.conditionText.toString());
-    });
-    super.initState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('weather'),
+      ),
+      body: const SafeArea(child: CustomPageView()),
+    );
   }
+}
+
+class CustomPageView extends StatelessWidget {
+  const CustomPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    final PageController controller = PageController();
+    return PageView(
+      controller: controller,
+      children: const <Widget>[
+        RealtimeWeather(),
+        Center(
+          child: Text('Second Page'),
+        ),
+        Center(
+          child: Text('Third Page'),
+        ),
+      ],
+    );
   }
 }
