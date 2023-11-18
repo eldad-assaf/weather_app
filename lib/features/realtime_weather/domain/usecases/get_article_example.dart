@@ -1,14 +1,17 @@
-// import 'package:clean_architecture/core/resources/data_state.dart';
-// import 'package:clean_architecture/core/usecase/usecase.dart';
-// import 'package:clean_architecture/features/daily_news/domain/entities/article.dart';
-// import 'package:clean_architecture/features/daily_news/domain/repositories/article_repository.dart';
 
-// class GetArticleUseCase implements UseCase<DataState<List<ArticleEntity>>, void> {
-//   final ArticleRepository _articleRepository;
-//   GetArticleUseCase(this._articleRepository);
 
-//   @override
-//   Future<DataState<List<ArticleEntity>>> call({void params}) {
-//     return _articleRepository.getNewsArticale();
-//   }
-// }
+import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
+
+import '../../../../core/resources/data_state.dart';
+import '../../../../core/usecase/usecase.dart';
+import '../repositories/realtime_weather_repository.dart';
+
+class FetchRealtimeWeatherUseCase implements UseCase<DataState<RealtimeWeatherEntity>, void> {
+  final RealtimeWeatherRepository _realtimeWeatherRepository;
+  FetchRealtimeWeatherUseCase(this._realtimeWeatherRepository);
+
+  @override
+  Future<DataState<RealtimeWeatherEntity>> call({void params}) {
+    return _realtimeWeatherRepository.getRealtimeWeather();
+  }
+}

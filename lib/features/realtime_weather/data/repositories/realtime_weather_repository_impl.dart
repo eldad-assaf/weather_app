@@ -28,6 +28,7 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
             requestOptions: httpResponse.response.requestOptions));
       }
     } on DioException catch (e) {
+      // ignore: avoid_print
       print(e.toString());
       return DataFailed(e);
     }
