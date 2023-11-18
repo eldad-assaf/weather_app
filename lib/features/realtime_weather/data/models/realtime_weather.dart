@@ -13,7 +13,7 @@ class RealtimeWeatherModel extends RealtimeWeatherEntity {
   });
 
   factory RealtimeWeatherModel.fromJson(Map<String, dynamic> map) {
-      return RealtimeWeatherModel(
+    return RealtimeWeatherModel(
       loactionName: map['location']['name'] ?? "",
       tempC: (map['current']['temp_c'] ?? 0.0).toDouble(),
       tempF: (map['current']['temp_f'] ?? 0.0).toDouble(),

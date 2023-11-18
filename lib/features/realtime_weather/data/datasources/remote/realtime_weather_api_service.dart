@@ -14,10 +14,11 @@ abstract class RealtimeWeatherApiService {
   factory RealtimeWeatherApiService(Dio dio) = _RealtimeWeatherApiService;
   
 
+//http://api.weatherapi.com/v1/current.json?key=44789cee7b5543e791a152424231711&q=Tel-Aviv&aqi=no
 
   @GET('/current.json')
   Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather(
-    @Query("apiKey") String ? apiKey,
-    @Query("cityName") String ? cityName,
+    @Query("key") String ? apiKey,
+    @Query("q") String ? cityName,
   );
 }

@@ -21,14 +21,14 @@ class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather({
+  Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather(
     String? apiKey,
     String? cityName,
-  }) async {
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'apiKey': apiKey,
-      r'cityName': cityName,
+      r'key': apiKey,
+      r'q': cityName,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

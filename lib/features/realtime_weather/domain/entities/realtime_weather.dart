@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class RealtimeWeatherEntity extends Equatable {
   final String? loactionName;
-  final int? tempC;
-  final int? tempF;
+  final double? tempC;
+  final double? tempF;
   final int? isDay;
   final String? conditionText;
   final String? conditionIcon;

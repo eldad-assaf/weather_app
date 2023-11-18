@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:weather_app/core/resources/data_state.dart';
@@ -22,14 +24,19 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
         return DataSucess(httpResponse.data);
       } else {
         return DataFailed(DioException(
-            error: httpResponse.response.statusMessage,
-            response: httpResponse.response,
-            type: DioExceptionType.badResponse,
-            requestOptions: httpResponse.response.requestOptions));
+          error: httpResponse.response.statusMessage,
+          response: httpResponse.response,
+          type: DioExceptionType.badResponse,
+          requestOptions: httpResponse.response.requestOptions,
+        ));
       }
     } on DioException catch (e) {
-      // ignore: avoid_print
+      print('DioException:');
       print(e.toString());
+      print(e.message);
+      print(e.error);
+      print(e.response!.statusMessage.toString());
+
       return DataFailed(e);
     }
   }
