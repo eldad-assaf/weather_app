@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/injection_container.dart';
-
+import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
 
 void main() async {
   await initializeDependencies();
+  Bloc.observer = const AppBlocObserver();
+
   runApp(const MyApp());
+}
+
+class AppBlocObserver extends BlocObserver {
+  /// {@macro app_bloc_observer}
+  const AppBlocObserver();
+
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    print(change.toString());
+  }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition.toString());
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +36,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
+    return BlocProvider<RealtimeWeatherBloc>(
+      create: (context) => sl()..add(const FetchRealtimeWeatherEvent()),
+      child: ScreenUtilInit(
         designSize: const Size(393, 851), // PIXEL 5
         child: MaterialApp(
           theme: ThemeData(
@@ -24,7 +47,9 @@ class MyApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           home: Home(sl()),
-        ));
+        ),
+      ),
+    );
   }
 }
 
