@@ -14,15 +14,11 @@ class RealtimeWeatherBloc
 
   void onFetchRealtimeWeather(FetchRealtimeWeatherEvent event,
       Emitter<RealtimeWeatherState> emit) async {
-    print('onFetchRealtimeWeather');
     final dataState = await _realtimeWeatherUseCase();
     if (dataState is DataSucess && dataState.data != null) {
-      print('success');
       emit(RealtimeWeatherDone(dataState.data!));
     }
     if (dataState is DataFailed) {
-      print('failed');
-
       emit(RealtimeWeatherError(dataState.error!));
     }
   }
