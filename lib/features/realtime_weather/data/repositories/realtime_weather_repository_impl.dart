@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/core/resources/data_state.dart';
 import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
 import '../../../../core/constants/constants.dart';
@@ -17,8 +18,10 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
   @override
   Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather() async {
     try {
+      final sf = await SharedPreferences.getInstance();
+      final cityName = sf.getString('cityName');
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
-          weatherAPIKey, 'tel-aviv');
+          weatherAPIKey, cityName ?? 'tel-aviv');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSucess(httpResponse.data);

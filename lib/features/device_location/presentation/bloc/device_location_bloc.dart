@@ -3,6 +3,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/device_location/domain/usecases/determine_position.dart';
 import 'package:geocoding/geocoding.dart';
 part 'device_location_event.dart';
@@ -39,7 +40,14 @@ class DeviceLocationBloc
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
           state.position!.latitude, state.position!.longitude);
-      print(placemarks[0].locality);
+      if (placemarks[0].locality != null) {
+        print(placemarks[0].locality);
+        final sf = await SharedPreferences.getInstance();
+        await sf.setString(
+          'cityName',
+          placemarks[0].locality!,
+        );
+      }
     } catch (e) {
       print(e.toString());
     }

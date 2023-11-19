@@ -20,8 +20,7 @@ class RealtimeWeather extends StatelessWidget {
           return Container();
         }
         return Container(
-          color:
-              state.realtimeWeather!.isDay == 0 ? Colors.white : Colors.black,
+          color: Colors.white,
           child: Column(
             children: [
               ReusableText(
