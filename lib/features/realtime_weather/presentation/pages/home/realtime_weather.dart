@@ -15,56 +15,67 @@ class RealtimeWeather extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            ReusableText(
-              style: appStyle(
-                50,
-                Colors.black,
-                FontWeight.bold,
+        if (state is RealtimeWeatherLoading ||
+            state is RealtimeWeatherInitial) {
+          return Container();
+        }
+        return Container(
+          color:
+              state.realtimeWeather!.isDay == 0 ? Colors.white : Colors.black,
+          child: Column(
+            children: [
+              ReusableText(
+                style: appStyle(
+                  50,
+                  Colors.black,
+                  FontWeight.bold,
+                ),
+                text: state.realtimeWeather?.loactionName ?? '',
               ),
-              text: state.realtimeWeather?.loactionName ?? '',
-            ),
-            ReusableText(
-              style: appStyle(
-                25,
-                Colors.black,
-                FontWeight.w300,
+              ReusableText(
+                style: appStyle(
+                  25,
+                  Colors.black,
+                  FontWeight.w300,
+                ),
+                text: "Today",
               ),
-              text: "Today",
-            ),
-            SizedBox(
-              height: 50.sp,
-            ),
-            ReusableText(
-              style: appStyle(
-                70,
-                Colors.black,
-                FontWeight.bold,
+              SizedBox(
+                height: 50.sp,
               ),
-              text: "${state.realtimeWeather?.tempC}C",
-            ),
-            SizedBox(
-                width: ScreenUtil().setWidth(222),
-                child: const Divider(
-                  thickness: 3,
-                )),
-            SizedBox(
-              height: 50.sp,
-            ),
-            ReusableText(
-              style: appStyle(
-                20,
-                Colors.black,
-                FontWeight.normal,
+              ReusableText(
+                style: appStyle(
+                  70,
+                  Colors.black,
+                  FontWeight.bold,
+                ),
+                text: "${state.realtimeWeather?.tempC}C",
               ),
-              text: state.realtimeWeather?.conditionText ?? '',
-            ),
-            FaIcon(
-              FontAwesomeIcons.cloudSun,
-              size: 55.sp,
-            )
-          ],
+              SizedBox(
+                  width: ScreenUtil().setWidth(222),
+                  child: const Divider(
+                    thickness: 3,
+                  )),
+              SizedBox(
+                height: 50.sp,
+              ),
+              ReusableText(
+                style: appStyle(
+                  25,
+                  Colors.black,
+                  FontWeight.normal,
+                ),
+                text: state.realtimeWeather?.conditionText ?? '',
+              ),
+              SizedBox(
+                height: 22.sp,
+              ),
+              FaIcon(
+                FontAwesomeIcons.cloudSun,
+                size: 85.sp,
+              )
+            ],
+          ),
         );
       },
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/injection_container.dart';
@@ -67,6 +68,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('weather'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: FaIcon(
+              FontAwesomeIcons.locationArrow,
+              size: 33.sp,
+            ),
+          )
+        ],
       ),
       body: const SafeArea(child: CustomPageView()),
     );

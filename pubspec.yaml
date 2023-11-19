@@ -17,6 +17,8 @@ dependencies:
   flutter_getit: ^1.2.1
   flutter_screenutil: ^5.9.0
   font_awesome_flutter: ^10.6.0
+  geocoding: ^2.1.1
+  geolocator: ^10.1.0
   get_it: ^7.6.4
   google_fonts: ^6.1.0
   json_annotation: ^4.8.1

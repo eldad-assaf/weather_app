@@ -18,7 +18,7 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
   Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather() async {
     try {
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
-          weatherAPIKey, 'Tel-Aviv');
+          weatherAPIKey, 'tel-aviv');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSucess(httpResponse.data);
