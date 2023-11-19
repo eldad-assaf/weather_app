@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
@@ -22,6 +24,45 @@ class RealtimeWeather extends StatelessWidget {
                 FontWeight.bold,
               ),
               text: state.realtimeWeather?.loactionName ?? '',
+            ),
+            ReusableText(
+              style: appStyle(
+                25,
+                Colors.black,
+                FontWeight.w300,
+              ),
+              text: "Today",
+            ),
+            SizedBox(
+              height: 50.sp,
+            ),
+            ReusableText(
+              style: appStyle(
+                70,
+                Colors.black,
+                FontWeight.bold,
+              ),
+              text: "${state.realtimeWeather?.tempC}C",
+            ),
+            SizedBox(
+                width: ScreenUtil().setWidth(222),
+                child: const Divider(
+                  thickness: 3,
+                )),
+            SizedBox(
+              height: 50.sp,
+            ),
+            ReusableText(
+              style: appStyle(
+                20,
+                Colors.black,
+                FontWeight.normal,
+              ),
+              text: state.realtimeWeather?.conditionText ?? '',
+            ),
+            FaIcon(
+              FontAwesomeIcons.cloudSun,
+              size: 55.sp,
             )
           ],
         );
