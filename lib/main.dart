@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
@@ -84,11 +85,19 @@ class _HomeState extends State<Home> {
                 BlocProvider.of<RealtimeWeatherBloc>(context)
                     .add(FetchRealtimeWeatherEvent(state.cityName));
               }
-              if (Platform.isIOS && state is DeviceLocationPermissionsDenied ||
-                  Platform.isIOS && state is DeviceLocationPermissionsDeniedForever){
-
-
-                  } 
+              if (state is DeviceLocationPermissionsDenied) {
+                const AlertDialogModel(
+                        message:
+                            'You need to give the app location permissions',
+                        buttons: {'ok': true},
+                        title: 'Permissions needed')
+                    .present(context)
+                    .then((requestAgain) async {
+                  if (requestAgain == true) {
+                    await Geolocator.openAppSettings();
+                  }
+                });
+              }
               // if (state is DeviceLocationPermissionsDenied) {
               //   const AlertDialogModel(
               //           message:
