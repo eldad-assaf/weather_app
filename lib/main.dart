@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/injection_container.dart';
@@ -81,27 +84,28 @@ class _HomeState extends State<Home> {
                 BlocProvider.of<RealtimeWeatherBloc>(context)
                     .add(FetchRealtimeWeatherEvent(state.cityName));
               }
-              if (state is DeviceLocationLoading) {}
-              if (state is DeviceLocationPermissionsDenied) {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const AboutDialog();
-                    });
-              }
-              if (state is DeviceLocationPermissionsDeniedForever) {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const AboutDialog();
-                    });
-              }
+              if (Platform.isIOS && state is DeviceLocationPermissionsDenied ||
+                  Platform.isIOS && state is DeviceLocationPermissionsDeniedForever){
+
+
+                  } 
+              // if (state is DeviceLocationPermissionsDenied) {
+              //   const AlertDialogModel(
+              //           message:
+              //               'You need to give the app location permissions',
+              //           buttons: {'ok': true},
+              //           title: 'Permissions needed')
+              //       .present(context);
+              // }
+              // if (state is DeviceLocationPermissionsDeniedForever) {
+
+              // }
             },
             child: BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
               builder: (context, state) {
                 if (state is DeviceLocationLoading) {
                   return const Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(right: 15),
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -119,9 +123,8 @@ class _HomeState extends State<Home> {
                   ),
                 );
               },
-              
             ),
-          )
+          ),
         ],
       ),
       body: const SafeArea(child: CustomPageView()),
