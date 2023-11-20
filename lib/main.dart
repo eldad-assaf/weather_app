@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
-import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/injection_container.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<RealtimeWeatherBloc>(
-          create: (context) => sl()..add(const FetchRealtimeWeatherEvent()),
+          create: (context) => sl()..add(const FetchRealtimeWeatherEvent(null)),
         ),
         BlocProvider<DeviceLocationBloc>(
           create: (context) => sl(),
@@ -76,22 +75,31 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('weather'),
         actions: [
-          BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
-            builder: (context, state) {
-              return InkWell(
-                onTap: () {
-                  BlocProvider.of<DeviceLocationBloc>(context)
-                      .add(const DeterminePositionEvent());
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: FaIcon(
-                    FontAwesomeIcons.locationArrow,
-                    size: 33.sp,
-                  ),
-                ),
-              );
+          BlocListener<DeviceLocationBloc, DeviceLocationState>(
+            listener: (context, state) {
+              print('new state : ${state.toString()}');
+              if (state is DeviceCityNameDone) {
+                BlocProvider.of<RealtimeWeatherBloc>(context)
+                    .add(FetchRealtimeWeatherEvent(state.cityName));
+              }
             },
+            child: BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
+              builder: (context, state) {
+                return InkWell(
+                  onTap: () {
+                    BlocProvider.of<DeviceLocationBloc>(context)
+                        .add(const DeterminePositionEvent());
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: FaIcon(
+                      FontAwesomeIcons.locationArrow,
+                      size: 33.sp,
+                    ),
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),

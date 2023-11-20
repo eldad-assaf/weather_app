@@ -14,7 +14,8 @@ class RealtimeWeatherBloc
 
   void onFetchRealtimeWeather(FetchRealtimeWeatherEvent event,
       Emitter<RealtimeWeatherState> emit) async {
-    final dataState = await _realtimeWeatherUseCase();
+    final dataState =
+        await _realtimeWeatherUseCase(params: event.cityName ?? 'new york');
     if (dataState is DataSucess && dataState.data != null) {
       emit(RealtimeWeatherDone(dataState.data!));
     }

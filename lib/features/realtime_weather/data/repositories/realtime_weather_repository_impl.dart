@@ -16,10 +16,10 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
   );
 
   @override
-  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather() async {
+  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather(String? cityName) async {
     try {
-      final sf = await SharedPreferences.getInstance();
-      final cityName = sf.getString('cityName');
+      // final sf = await SharedPreferences.getInstance();
+      // final cityName = sf.getString('cityName');
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
           weatherAPIKey, cityName ?? 'tel-aviv');
 

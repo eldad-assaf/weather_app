@@ -1,7 +1,9 @@
 abstract class RealtimeWeatherEvent {
-  const RealtimeWeatherEvent();
+  final String? cityName;
+
+  const RealtimeWeatherEvent({this.cityName});
 }
 
 class FetchRealtimeWeatherEvent extends RealtimeWeatherEvent {
-  const FetchRealtimeWeatherEvent();
+  const FetchRealtimeWeatherEvent(String? cityName):super(cityName: cityName);
 }

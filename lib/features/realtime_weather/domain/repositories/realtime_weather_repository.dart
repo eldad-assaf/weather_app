@@ -3,5 +3,5 @@ import '../entities/realtime_weather.dart';
 
 abstract class RealtimeWeatherRepository {
   //api methods
-  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather();
+  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather(String? cityName);
 }

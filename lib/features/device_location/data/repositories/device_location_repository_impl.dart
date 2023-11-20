@@ -1,8 +1,8 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/features/device_location/domain/repositories/device_location_repository.dart';
 
 class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
-  
   @override
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -39,4 +39,24 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
   }
+
+  @override
+  Future<String?> fetchCityName(Position? position) async {
+    if (position == null) {
+      return null;
+    }
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      if (placemarks[0].locality != null) {
+        return placemarks[0].locality;
+      }
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+    return null;
+  }
+
+
 }
