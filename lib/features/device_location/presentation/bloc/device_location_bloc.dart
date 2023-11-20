@@ -27,7 +27,7 @@ class DeviceLocationBloc
       emit(DevicePositionDone(position));
       add(const GeocodeCityNameEvent());
     } catch (e) {
-      final permission = await Geolocator.requestPermission();
+      final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         emit(const DeviceLocationPermissionsDenied(
             'Location permissions are denied.'));
@@ -43,7 +43,9 @@ class DeviceLocationBloc
   void onGeocodeCityName(
       GeocodeCityNameEvent event, Emitter<DeviceLocationState> emit) async {
     try {
-      final String? cityName = await _fetchCityNameUseCase.call();
+      final String? cityName =
+          await _fetchCityNameUseCase.call(params: state.position);
+      print(cityName);
       if (cityName == null) {
         emit(const DeviceLocationError(
             'Unable to retrive city name from coordinates'));

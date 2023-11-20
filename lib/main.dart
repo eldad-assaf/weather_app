@@ -77,14 +77,34 @@ class _HomeState extends State<Home> {
         actions: [
           BlocListener<DeviceLocationBloc, DeviceLocationState>(
             listener: (context, state) {
-              print('new state : ${state.toString()}');
               if (state is DeviceCityNameDone) {
                 BlocProvider.of<RealtimeWeatherBloc>(context)
                     .add(FetchRealtimeWeatherEvent(state.cityName));
               }
+              if (state is DeviceLocationLoading) {}
+              if (state is DeviceLocationPermissionsDenied) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AboutDialog();
+                    });
+              }
+              if (state is DeviceLocationPermissionsDeniedForever) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AboutDialog();
+                    });
+              }
             },
             child: BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
               builder: (context, state) {
+                if (state is DeviceLocationLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 return InkWell(
                   onTap: () {
                     BlocProvider.of<DeviceLocationBloc>(context)
@@ -99,6 +119,7 @@ class _HomeState extends State<Home> {
                   ),
                 );
               },
+              
             ),
           )
         ],

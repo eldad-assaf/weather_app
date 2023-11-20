@@ -43,11 +43,13 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
   @override
   Future<String?> fetchCityName(Position? position) async {
     if (position == null) {
+      print('position == null');
       return null;
     }
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
+      print(placemarks);
       if (placemarks[0].locality != null) {
         return placemarks[0].locality;
       }
@@ -57,6 +59,4 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     }
     return null;
   }
-
-
 }
