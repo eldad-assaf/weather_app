@@ -15,6 +15,7 @@ class RealtimeWeather extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
       builder: (context, state) {
+        
         if (state is RealtimeWeatherLoading ||
             state is RealtimeWeatherInitial) {
           return Container();

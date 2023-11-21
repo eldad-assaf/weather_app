@@ -94,6 +94,20 @@ class _HomeState extends State<Home> {
                     .present(context)
                     .then((requestAgain) async {
                   if (requestAgain == true) {
+                    // await Geolocator.openAppSettings();
+                    await Geolocator.openLocationSettings();
+                  }
+                });
+              }
+              if (state is DeviceLocationPermissionsDeniedForever) {
+                const AlertDialogModel(
+                        message:
+                            'You need to give the app location permissions',
+                        buttons: {'ok': true},
+                        title: 'Permissions needed')
+                    .present(context)
+                    .then((requestAgain) async {
+                  if (requestAgain == true) {
                     await Geolocator.openAppSettings();
                   }
                 });
