@@ -40,26 +40,5 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     return await Geolocator.getCurrentPosition();
   }
 
-  @override
-  Future<String?> fetchCityName(Position? position) async {
-    if (position == null) {
-      print('position == null');
-      return null;
-    }
-    try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-        localeIdentifier: "en_US",
-      );
-      if (placemarks[0].locality != null) {
-        return placemarks[0].locality;
-        //return 'עיר ללא שם'; //to simulate an error
-      }
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-    return null;
-  }
+
 }

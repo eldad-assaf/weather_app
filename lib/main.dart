@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<RealtimeWeatherBloc>(
           create: (context) => sl()..add(const FetchRealtimeWeatherEvent(null)),
         ),
-        BlocProvider<DeviceLocationBloc>(
+        BlocProvider<DevicePositionBloc>(
           create: (context) => sl(),
         ),
       ],
@@ -79,11 +79,11 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('weather'),
         actions: [
-          BlocListener<DeviceLocationBloc, DeviceLocationState>(
+          BlocListener<DevicePositionBloc, DevicePoditionState>(
             listener: (context, state) {
-              if (state is DeviceCityNameDone) {
+              if (state is DevicePositionDone) {
                 BlocProvider.of<RealtimeWeatherBloc>(context)
-                    .add(FetchRealtimeWeatherEvent(state.cityName));
+                    .add(FetchRealtimeWeatherEvent(state.position.toString()));
               }
               if (state is DeviceLocationServicesNotEnabled) {
                 const AlertDialogModel(
@@ -107,7 +107,6 @@ class _HomeState extends State<Home> {
                     .present(context)
                     .then((requestAgain) async {
                   if (requestAgain == true) {
-                    // await Geolocator.openAppSettings();
                     await Geolocator.openLocationSettings();
                   }
                 });
@@ -126,9 +125,9 @@ class _HomeState extends State<Home> {
                 });
               }
             },
-            child: BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
+            child: BlocBuilder<DevicePositionBloc, DevicePoditionState>(
               builder: (context, state) {
-                if (state is DeviceLocationLoading) {
+                if (state is DevicePositionLoading) {
                   return const Padding(
                     padding: EdgeInsets.only(right: 15),
                     child: CircularProgressIndicator(),
@@ -136,7 +135,7 @@ class _HomeState extends State<Home> {
                 }
                 return InkWell(
                   onTap: () {
-                    BlocProvider.of<DeviceLocationBloc>(context)
+                    BlocProvider.of<DevicePositionBloc>(context)
                         .add(const DeterminePositionEvent());
                   },
                   child: Padding(
