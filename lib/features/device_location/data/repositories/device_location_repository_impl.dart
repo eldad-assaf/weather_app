@@ -48,11 +48,13 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     }
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude, position.longitude,
-          localeIdentifier: "en_US");
-      print(placemarks);
+        position.latitude,
+        position.longitude,
+        localeIdentifier: "en_US",
+      );
       if (placemarks[0].locality != null) {
         return placemarks[0].locality;
+        //return 'עיר ללא שם'; //to simulate an error
       }
     } catch (e) {
       print(e.toString());

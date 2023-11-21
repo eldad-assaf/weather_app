@@ -24,6 +24,10 @@ class DeviceCityNameDone extends DeviceLocationState {
   const DeviceCityNameDone(String cityName) : super(cityName: cityName);
 }
 
+class DeviceLocationServicesNotEnabled extends DeviceLocationState {
+  const DeviceLocationServicesNotEnabled(Object error)
+      : super(error: error);
+}
 
 class DeviceLocationPermissionsDeniedForever extends DeviceLocationState {
   const DeviceLocationPermissionsDeniedForever(Object error)

@@ -85,6 +85,19 @@ class _HomeState extends State<Home> {
                 BlocProvider.of<RealtimeWeatherBloc>(context)
                     .add(FetchRealtimeWeatherEvent(state.cityName));
               }
+              if (state is DeviceLocationServicesNotEnabled) {
+                const AlertDialogModel(
+                        message:
+                            'Please go to settings and enable the device location service',
+                        buttons: {'ok': true},
+                        title: 'Location service')
+                    .present(context)
+                    .then((goToSettings) async {
+                  if (goToSettings == true) {
+                    await Geolocator.openLocationSettings();
+                  }
+                });
+              }
               if (state is DeviceLocationPermissionsDenied) {
                 const AlertDialogModel(
                         message:
@@ -112,17 +125,6 @@ class _HomeState extends State<Home> {
                   }
                 });
               }
-              // if (state is DeviceLocationPermissionsDenied) {
-              //   const AlertDialogModel(
-              //           message:
-              //               'You need to give the app location permissions',
-              //           buttons: {'ok': true},
-              //           title: 'Permissions needed')
-              //       .present(context);
-              // }
-              // if (state is DeviceLocationPermissionsDeniedForever) {
-
-              // }
             },
             child: BlocBuilder<DeviceLocationBloc, DeviceLocationState>(
               builder: (context, state) {

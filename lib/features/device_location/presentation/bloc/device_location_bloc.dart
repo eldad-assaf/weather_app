@@ -23,6 +23,13 @@ class DeviceLocationBloc
       DeterminePositionEvent event, Emitter<DeviceLocationState> emit) async {
     try {
       emit(const DeviceLocationLoading());
+
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        emit(const DeviceLocationServicesNotEnabled(
+            'Location services are off'));
+      }
       final position = await _determinePositionUseCase();
       emit(DevicePositionDone(position));
       add(const GeocodeCityNameEvent());
