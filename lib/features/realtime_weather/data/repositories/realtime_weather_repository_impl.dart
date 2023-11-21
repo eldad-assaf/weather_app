@@ -16,13 +16,14 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
   );
 
   @override
-  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather(String? cityName) async {
+  Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather(
+      String? cityName) async {
     try {
-      // final sf = await SharedPreferences.getInstance();
-      // final cityName = sf.getString('cityName');
+      // 37.4219983 ,-122.084
+      // final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
+      //     weatherAPIKey, cityName ?? 'tel-aviv');
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
-          weatherAPIKey, cityName ?? 'tel-aviv');
-
+          weatherAPIKey, '32.318410, 35.265349');
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSucess(httpResponse.data);
       } else {
