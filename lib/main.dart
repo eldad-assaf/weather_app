@@ -45,9 +45,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  
   Future<String?> _getLastPositionFromSharedPrefs() async {
     final sf = await SharedPreferences.getInstance();
-    return sf.getString("lastPosition");
+    return sf.getString("position");
   }
 
   @override
@@ -61,7 +62,6 @@ class _MyAppState extends State<MyApp> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          print('snapshot : ${snapshot.data}');
 
           return MultiBlocProvider(
             providers: [
