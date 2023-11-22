@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                   useMaterial3: true,
                 ),
                 debugShowCheckedModeBanner: false,
-                home: const Home(),
+                home: const CustomPageView(),
               ),
             ),
           );
@@ -118,6 +116,7 @@ class CustomPageView extends StatelessWidget {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
+          centerTitle: true,
           // forceMaterialTransparency: true,
           elevation: 0,
           systemOverlayStyle:
@@ -199,12 +198,15 @@ class CustomPageView extends StatelessWidget {
         body: PageView(
           padEnds: false,
           controller: controller,
-          children: const <Widget>[
-            RealtimeWeather(),
-            Center(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 20.sp),
+              child: const RealtimeWeather(),
+            ),
+            const Center(
               child: Text('Second Page'),
             ),
-            Center(
+            const Center(
               child: Text('Third Page'),
             ),
           ],
