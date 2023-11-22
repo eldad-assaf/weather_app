@@ -1,5 +1,7 @@
-import 'package:geocoding/geocoding.dart';
+// ignore_for_file: avoid_print
+
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/device_location/domain/repositories/device_location_repository.dart';
 
 class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
@@ -41,25 +43,12 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
   }
 
   @override
-  Future<String?> fetchCityName(Position? position) async {
-    if (position == null) {
-      print('position == null');
-      return null;
-    }
+  Future<void> savePositionInSf(String position) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-        localeIdentifier: "en_US",
-      );
-      if (placemarks[0].locality != null) {
-        return placemarks[0].locality;
-        //return 'עיר ללא שם'; //to simulate an error
-      }
+      final sf = await SharedPreferences.getInstance();
+      await sf.setString('position', position);
     } catch (e) {
       print(e.toString());
-      return null;
     }
-    return null;
   }
 }

@@ -4,26 +4,31 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/features/device_location/domain/usecases/determine_position.dart';
-import 'package:weather_app/features/device_location/domain/usecases/fetch_city_name.dart';
+import 'package:weather_app/features/device_location/domain/usecases/save_last_position.dart';
 part 'device_location_event.dart';
 part 'device_location_state.dart';
 
-class DeviceLocationBloc
-    extends Bloc<DeviceLocationEvent, DeviceLocationState> {
-  final DeterminePositionUseCase _determinePositionUseCase;
-  final FetchCityNameUseCase _fetchCityNameUseCase;
+extension PostitionAsString on Position {
+  String asString() {
+    return '${latitude.toStringAsFixed(7)}, ${longitude.toStringAsFixed(7)}';
+  }
+}
 
-  DeviceLocationBloc(this._determinePositionUseCase, this._fetchCityNameUseCase)
+class DevicePositionBloc
+    extends Bloc<DevicePositionEvent, DevicePoditionState> {
+  final DeterminePositionUseCase _determinePositionUseCase;
+  final SaveLastPositionUseCase _saveLastPositionUseCase;
+
+  DevicePositionBloc(
+      this._determinePositionUseCase, this._saveLastPositionUseCase)
       : super(DeviceLocationInitial()) {
     on<DeterminePositionEvent>(onDeterminePosition);
-    on<GeocodeCityNameEvent>(onGeocodeCityName);
   }
 
   void onDeterminePosition(
-      DeterminePositionEvent event, Emitter<DeviceLocationState> emit) async {
+      DeterminePositionEvent event, Emitter<DevicePoditionState> emit) async {
     try {
-      emit(const DeviceLocationLoading());
-
+      emit(const DevicePositionLoading());
       bool isLocationServiceEnabled =
           await Geolocator.isLocationServiceEnabled();
       if (!isLocationServiceEnabled) {
@@ -31,8 +36,9 @@ class DeviceLocationBloc
             'Location services are off'));
       }
       final position = await _determinePositionUseCase();
-      emit(DevicePositionDone(position));
-      add(const GeocodeCityNameEvent());
+      await _saveLastPositionUseCase(params: position.asString());
+
+      emit(DevicePositionDone(position.asString()));
     } catch (e) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
@@ -46,25 +52,4 @@ class DeviceLocationBloc
       }
     }
   }
-
-  void onGeocodeCityName(
-      GeocodeCityNameEvent event, Emitter<DeviceLocationState> emit) async {
-    try {
-      final String? cityName =
-          await _fetchCityNameUseCase.call(params: state.position);
-      print(cityName);
-      if (cityName == null) {
-        emit(const DeviceLocationError(
-            'Unable to retrive city name from coordinates'));
-      } else {
-        emit(DeviceCityNameDone(cityName));
-      }
-    } catch (e) {
-      print(e.toString());
-      emit(DeviceLocationError(e));
-    }
-  }
 }
-
-     // await Geolocator.openAppSettings();
-    // await Geolocator.openLocationSettings();

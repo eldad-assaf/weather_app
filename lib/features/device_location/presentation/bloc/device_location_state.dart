@@ -1,50 +1,37 @@
 part of 'device_location_bloc.dart';
 
-abstract class DeviceLocationState extends Equatable {
-  final Position? position;
-  final String? cityName;
+abstract class DevicePoditionState extends Equatable {
+  final String? position;
   final Object? error;
-  const DeviceLocationState({this.position, this.cityName, this.error});
+  const DevicePoditionState({this.position, this.error});
 
   @override
-  List<Object?> get props => [position, cityName, error];
+  List<Object?> get props => [position, error];
 }
 
-final class DeviceLocationInitial extends DeviceLocationState {}
+final class DeviceLocationInitial extends DevicePoditionState {}
 
-class DeviceLocationLoading extends DeviceLocationState {
-  const DeviceLocationLoading();
+class DevicePositionLoading extends DevicePoditionState {
+  const DevicePositionLoading();
 }
 
-class DevicePositionDone extends DeviceLocationState {
-  const DevicePositionDone(Position position) : super(position: position);
+class DevicePositionDone extends DevicePoditionState {
+  const DevicePositionDone(String position) : super(position: position);
 }
 
-class DeviceCityNameDone extends DeviceLocationState {
-  const DeviceCityNameDone(String cityName) : super(cityName: cityName);
+class DeviceLocationServicesNotEnabled extends DevicePoditionState {
+  const DeviceLocationServicesNotEnabled(Object error) : super(error: error);
 }
 
-class DeviceLocationServicesNotEnabled extends DeviceLocationState {
-  const DeviceLocationServicesNotEnabled(Object error)
-      : super(error: error);
-}
-
-class DeviceLocationPermissionsDeniedForever extends DeviceLocationState {
+class DeviceLocationPermissionsDeniedForever extends DevicePoditionState {
   const DeviceLocationPermissionsDeniedForever(Object error)
       : super(error: error);
 }
 
-class DeviceLocationPermissionsDenied extends DeviceLocationState {
+class DeviceLocationPermissionsDenied extends DevicePoditionState {
   const DeviceLocationPermissionsDenied(Object error) : super(error: error);
 }
 
-class DeviceLocationError extends DeviceLocationState {
+class DeviceLocationError extends DevicePoditionState {
   const DeviceLocationError(Object error) : super(error: error);
 }
-// class DeviceLocationError extends DeviceLocationState {
-//   const DeviceLocationError(Object error) : super(error: error);
-// }
-
-// class DeviceLocationError extends DeviceLocationState {
-//   const DeviceLocationError(Object error) : super(error: error);
-// }

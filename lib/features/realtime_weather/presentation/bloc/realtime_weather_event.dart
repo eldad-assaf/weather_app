@@ -1,9 +1,11 @@
-abstract class RealtimeWeatherEvent {
-  final String? cityName;
 
-  const RealtimeWeatherEvent({this.cityName});
+abstract class RealtimeWeatherEvent {
+  final String? position; // keep it a String (Not a Position)
+
+  const RealtimeWeatherEvent({this.position});
 }
 
 class FetchRealtimeWeatherEvent extends RealtimeWeatherEvent {
-  const FetchRealtimeWeatherEvent(String? cityName):super(cityName: cityName);
+  const FetchRealtimeWeatherEvent(String? position)
+      : super(position: position);
 }

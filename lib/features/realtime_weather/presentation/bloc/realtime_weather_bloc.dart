@@ -14,10 +14,12 @@ class RealtimeWeatherBloc
 
   void onFetchRealtimeWeather(FetchRealtimeWeatherEvent event,
       Emitter<RealtimeWeatherState> emit) async {
-    print(event.cityName);
     emit(const RealtimeWeatherLoading());
-    final dataState =
-        await _realtimeWeatherUseCase(params: event.cityName ?? 'new york');
+    print(event.position);
+    final dataState = await _realtimeWeatherUseCase(
+        //if the position is null because the user did not use the location feature
+        //then
+        params: event.position ?? "32.084304, 34.772472");
     if (dataState is DataSucess && dataState.data != null) {
       emit(RealtimeWeatherDone(dataState.data!));
     }
