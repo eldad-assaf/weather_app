@@ -15,6 +15,38 @@ import '../../bloc/realtime_weather_state.dart';
 class RealtimeWeather extends StatelessWidget {
   const RealtimeWeather({super.key});
 
+  Widget getWeatherIcon(int code) {
+    switch (code) {
+      case == 1000: //suuny
+        return Image.asset('assets/6.png');
+      case == 1003: // partly cloudy
+        return Image.asset('assets/7.png');
+      case >= 1006: // cloudy
+        return Image.asset('assets/8.png');
+      case >= 1009: // overcast
+        return Image.asset('assets/8.png');
+      case >= 1030: //mist
+        return Image.asset('assets/5.png');
+      case == 1063: // Patchy rain possible
+        return Image.asset('assets/2.png');
+      case == 1066: //Patchy snow possible
+        return Image.asset('assets/4.png');
+      case == 1069: //Patchy snow possible
+        return Image.asset('assets/4.png');
+      case == 1072: //Patchy freezing drizzle possible
+        return Image.asset('assets/4.png');
+      case == 1087: //Thundery outbreaks possible
+        return Image.asset('assets/1.png');
+      case == 1087: //Thundery outbreaks possible
+        return Image.asset('assets/1.png');
+
+      default:
+        return Image.asset(
+          'assets/14.png',
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<RealtimeWeatherBloc, RealtimeWeatherState>(
@@ -130,13 +162,10 @@ class RealtimeWeather extends StatelessWidget {
                             text: state.realtimeWeather?.conditionText ?? '',
                           ),
                           SizedBox(
-                            height: 22.sp,
-                          ),
-                          FaIcon(
-                            FontAwesomeIcons.cloudSun,
-                            size: 85.sp,
-                            color: Colors.white,
-                          )
+                              width: 180.sp,
+                              height: 180.sp,
+                              child: getWeatherIcon(
+                                  state.realtimeWeather!.conditionCode!)),
                         ],
                       ),
                     ),
