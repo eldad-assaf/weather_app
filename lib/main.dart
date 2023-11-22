@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,7 +46,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   Future<String?> _getLastPositionFromSharedPrefs() async {
     final sf = await SharedPreferences.getInstance();
     return sf.getString("position");
@@ -62,7 +62,6 @@ class _MyAppState extends State<MyApp> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-
           return MultiBlocProvider(
             providers: [
               BlocProvider<RealtimeWeatherBloc>(
@@ -105,7 +104,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.orange,
+        // forceMaterialTransparency: true,
+        elevation: 0,
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
         title: const Text('weather'),
         actions: [
           BlocListener<DevicePositionBloc, DevicePoditionState>(
