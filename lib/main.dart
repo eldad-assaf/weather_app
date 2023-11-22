@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
@@ -36,31 +37,59 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<String?> _getLastPositionFromSharedPrefs() async {
+    final sf = await SharedPreferences.getInstance();
+    return sf.getString("lastPosition");
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<RealtimeWeatherBloc>(
-          create: (context) => sl()..add(const FetchRealtimeWeatherEvent(null)),
-        ),
-        BlocProvider<DevicePositionBloc>(
-          create: (context) => sl(),
-        ),
-      ],
-      child: ScreenUtilInit(
-        designSize: const Size(393, 851), // PIXEL 5
-        child: MaterialApp(
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          debugShowCheckedModeBanner: false,
-          home: const Home(),
-        ),
-      ),
+    return FutureBuilder<String?>(
+      future: _getLastPositionFromSharedPrefs(),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          print('snapshot : ${snapshot.data}');
+       
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<RealtimeWeatherBloc>(
+                create: (context) =>
+                    sl()..add(FetchRealtimeWeatherEvent(snapshot.data)),
+              ),
+              BlocProvider<DevicePositionBloc>(
+                create: (context) => sl(),
+              ),
+            ],
+            child: ScreenUtilInit(
+              designSize: const Size(393, 851), // PIXEL 5
+              child: MaterialApp(
+                theme: ThemeData(
+                  colorScheme:
+                      ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                  useMaterial3: true,
+                ),
+                debugShowCheckedModeBanner: false,
+                home: const Home(),
+              ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }
@@ -135,8 +164,9 @@ class _HomeState extends State<Home> {
                 }
                 return InkWell(
                   onTap: () {
-                    BlocProvider.of<DevicePositionBloc>(context)
-                        .add(const DeterminePositionEvent());
+                    // BlocProvider.of<DevicePositionBloc>(context)
+                    //     .add(const DeterminePositionEvent());
+                    
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),

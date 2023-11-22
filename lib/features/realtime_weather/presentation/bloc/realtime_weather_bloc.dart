@@ -17,7 +17,7 @@ class RealtimeWeatherBloc
     emit(const RealtimeWeatherLoading());
     final dataState = await _realtimeWeatherUseCase(
       //if the position is null because the user did not use the location feature
-      //then the defult is Tel aviv.
+      //then 
         params: event.position ?? "32.084304, 34.772472");
     if (dataState is DataSucess && dataState.data != null) {
       emit(RealtimeWeatherDone(dataState.data!));
