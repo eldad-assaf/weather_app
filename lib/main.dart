@@ -103,91 +103,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        // forceMaterialTransparency: true,
-        elevation: 0,
-        systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
-        title: const Text('weather'),
-        actions: [
-          BlocListener<DevicePositionBloc, DevicePoditionState>(
-            listener: (context, state) {
-              if (state is DevicePositionDone) {
-                BlocProvider.of<RealtimeWeatherBloc>(context)
-                    .add(FetchRealtimeWeatherEvent(state.position.toString()));
-              }
-              if (state is DeviceLocationServicesNotEnabled) {
-                const AlertDialogModel(
-                        message:
-                            'Please go to settings and enable the device location service',
-                        buttons: {'ok': true},
-                        title: 'Location service')
-                    .present(context)
-                    .then((goToSettings) async {
-                  if (goToSettings == true) {
-                    await Geolocator.openLocationSettings();
-                  }
-                });
-              }
-              if (state is DeviceLocationPermissionsDenied) {
-                const AlertDialogModel(
-                        message:
-                            'You need to give the app location permissions',
-                        buttons: {'ok': true},
-                        title: 'Permissions needed')
-                    .present(context)
-                    .then((requestAgain) async {
-                  if (requestAgain == true) {
-                    await Geolocator.openLocationSettings();
-                  }
-                });
-              }
-              if (state is DeviceLocationPermissionsDeniedForever) {
-                const AlertDialogModel(
-                        message:
-                            'You need to give the app location permissions',
-                        buttons: {'ok': true},
-                        title: 'Permissions needed')
-                    .present(context)
-                    .then((requestAgain) async {
-                  if (requestAgain == true) {
-                    await Geolocator.openAppSettings();
-                  }
-                });
-              }
-            },
-            child: BlocBuilder<DevicePositionBloc, DevicePoditionState>(
-              builder: (context, state) {
-                if (state is DevicePositionLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return InkWell(
-                  onTap: () {
-                    BlocProvider.of<DevicePositionBloc>(context)
-                        .add(const DeterminePositionEvent());
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: FaIcon(
-                      FontAwesomeIcons.locationArrow,
-                      size: 33.sp,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      body: const SafeArea(child: CustomPageView()),
-    );
+    return const CustomPageView();
   }
 }
 
@@ -197,17 +113,101 @@ class CustomPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    return PageView(
-      controller: controller,
-      children: const <Widget>[
-        RealtimeWeather(),
-        Center(
-          child: Text('Second Page'),
+    return Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          // forceMaterialTransparency: true,
+          elevation: 0,
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
+          title: const Text('weather'),
+          actions: [
+            BlocListener<DevicePositionBloc, DevicePoditionState>(
+              listener: (context, state) {
+                if (state is DevicePositionDone) {
+                  BlocProvider.of<RealtimeWeatherBloc>(context).add(
+                      FetchRealtimeWeatherEvent(state.position.toString()));
+                }
+                if (state is DeviceLocationServicesNotEnabled) {
+                  const AlertDialogModel(
+                          message:
+                              'Please go to settings and enable the device location service',
+                          buttons: {'ok': true},
+                          title: 'Location service')
+                      .present(context)
+                      .then((goToSettings) async {
+                    if (goToSettings == true) {
+                      await Geolocator.openLocationSettings();
+                    }
+                  });
+                }
+                if (state is DeviceLocationPermissionsDenied) {
+                  const AlertDialogModel(
+                          message:
+                              'You need to give the app location permissions',
+                          buttons: {'ok': true},
+                          title: 'Permissions needed')
+                      .present(context)
+                      .then((requestAgain) async {
+                    if (requestAgain == true) {
+                      await Geolocator.openLocationSettings();
+                    }
+                  });
+                }
+                if (state is DeviceLocationPermissionsDeniedForever) {
+                  const AlertDialogModel(
+                          message:
+                              'You need to give the app location permissions',
+                          buttons: {'ok': true},
+                          title: 'Permissions needed')
+                      .present(context)
+                      .then((requestAgain) async {
+                    if (requestAgain == true) {
+                      await Geolocator.openAppSettings();
+                    }
+                  });
+                }
+              },
+              child: BlocBuilder<DevicePositionBloc, DevicePoditionState>(
+                builder: (context, state) {
+                  if (state is DevicePositionLoading) {
+                    return const Padding(
+                      padding: EdgeInsets.only(right: 15),
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return InkWell(
+                    onTap: () {
+                      BlocProvider.of<DevicePositionBloc>(context)
+                          .add(const DeterminePositionEvent());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: FaIcon(
+                        FontAwesomeIcons.locationArrow,
+                        size: 33.sp,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        Center(
-          child: Text('Third Page'),
-        ),
-      ],
-    );
+        body: PageView(
+          padEnds: false,
+          controller: controller,
+          children: const <Widget>[
+            RealtimeWeather(),
+            Center(
+              child: Text('Second Page'),
+            ),
+            Center(
+              child: Text('Third Page'),
+            ),
+          ],
+        ));
   }
 }
