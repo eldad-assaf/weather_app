@@ -198,15 +198,12 @@ class CustomPageView extends StatelessWidget {
         body: PageView(
           padEnds: false,
           controller: controller,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 20.sp),
-              child: const RealtimeWeather(),
-            ),
-            const Center(
+          children: const <Widget>[
+            RealtimeWeather(),
+            Center(
               child: Text('Second Page'),
             ),
-            const Center(
+            Center(
               child: Text('Third Page'),
             ),
           ],
