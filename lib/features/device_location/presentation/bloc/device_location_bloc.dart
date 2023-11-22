@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/features/device_location/domain/usecases/determine_position.dart';
+import 'package:weather_app/features/device_location/domain/usecases/save_last_position.dart';
 part 'device_location_event.dart';
 part 'device_location_state.dart';
 
@@ -16,8 +17,10 @@ extension PostitionAsString on Position {
 class DevicePositionBloc
     extends Bloc<DevicePositionEvent, DevicePoditionState> {
   final DeterminePositionUseCase _determinePositionUseCase;
+  final SaveLastPositionUseCase _saveLastPositionUseCase;
 
-  DevicePositionBloc(this._determinePositionUseCase)
+  DevicePositionBloc(
+      this._determinePositionUseCase, this._saveLastPositionUseCase)
       : super(DeviceLocationInitial()) {
     on<DeterminePositionEvent>(onDeterminePosition);
   }
@@ -26,7 +29,6 @@ class DevicePositionBloc
       DeterminePositionEvent event, Emitter<DevicePoditionState> emit) async {
     try {
       emit(const DevicePositionLoading());
-
       bool isLocationServiceEnabled =
           await Geolocator.isLocationServiceEnabled();
       if (!isLocationServiceEnabled) {
@@ -34,10 +36,9 @@ class DevicePositionBloc
             'Location services are off'));
       }
       final position = await _determinePositionUseCase();
-      print(position);
-      final ps = position.asString();
-      print(ps);
-      emit(DevicePositionDone(ps));
+      await _saveLastPositionUseCase(params: position.asString());
+
+      emit(DevicePositionDone(position.asString()));
     } catch (e) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {

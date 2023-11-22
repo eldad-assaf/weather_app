@@ -1,5 +1,7 @@
-import 'package:geocoding/geocoding.dart';
+// ignore_for_file: avoid_print
+
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/device_location/domain/repositories/device_location_repository.dart';
 
 class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
@@ -40,5 +42,13 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     return await Geolocator.getCurrentPosition();
   }
 
-
+  @override
+  Future<void> savePositionInSf(String position) async {
+    try {
+      final sf = await SharedPreferences.getInstance();
+      await sf.setString('position', position);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

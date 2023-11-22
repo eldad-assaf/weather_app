@@ -10,9 +10,7 @@ class FetchRealtimeWeatherUseCase
 
   @override
   Future<DataState<RealtimeWeatherEntity>> call({String? params}) {
-    if (params == null) {
-      throw Error();
-    }
-    return _realtimeWeatherRepository.getRealtimeWeather(params);
+ 
+    return _realtimeWeatherRepository.getRealtimeWeather(params!);
   }
 }
