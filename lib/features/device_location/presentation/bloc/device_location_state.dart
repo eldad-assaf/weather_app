@@ -1,7 +1,7 @@
 part of 'device_location_bloc.dart';
 
 abstract class DevicePoditionState extends Equatable {
-  final Position? position;
+  final String? position;
   final Object? error;
   const DevicePoditionState({this.position, this.error});
 
@@ -16,7 +16,7 @@ class DevicePositionLoading extends DevicePoditionState {
 }
 
 class DevicePositionDone extends DevicePoditionState {
-  const DevicePositionDone(Position position) : super(position: position);
+  const DevicePositionDone(String position) : super(position: position);
 }
 
 class DeviceLocationServicesNotEnabled extends DevicePoditionState {

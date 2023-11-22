@@ -7,6 +7,12 @@ import 'package:weather_app/features/device_location/domain/usecases/determine_p
 part 'device_location_event.dart';
 part 'device_location_state.dart';
 
+extension PostitionAsString on Position {
+  String asString() {
+    return '${latitude.toStringAsFixed(7)}, ${longitude.toStringAsFixed(7)}';
+  }
+}
+
 class DevicePositionBloc
     extends Bloc<DevicePositionEvent, DevicePoditionState> {
   final DeterminePositionUseCase _determinePositionUseCase;
@@ -28,7 +34,10 @@ class DevicePositionBloc
             'Location services are off'));
       }
       final position = await _determinePositionUseCase();
-      emit(DevicePositionDone(position));
+      print(position);
+      final ps = position.asString();
+      print(ps);
+      emit(DevicePositionDone(ps));
     } catch (e) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
@@ -42,6 +51,4 @@ class DevicePositionBloc
       }
     }
   }
-
-
 }

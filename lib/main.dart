@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           print('snapshot : ${snapshot.data}');
-       
+
           return MultiBlocProvider(
             providers: [
               BlocProvider<RealtimeWeatherBloc>(
@@ -164,9 +164,8 @@ class _HomeState extends State<Home> {
                 }
                 return InkWell(
                   onTap: () {
-                    // BlocProvider.of<DevicePositionBloc>(context)
-                    //     .add(const DeterminePositionEvent());
-                    
+                    BlocProvider.of<DevicePositionBloc>(context)
+                        .add(const DeterminePositionEvent());
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
