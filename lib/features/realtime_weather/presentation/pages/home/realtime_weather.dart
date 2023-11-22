@@ -46,7 +46,7 @@ class RealtimeWeather extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is RealtimeWeatherDone) {
             return Padding(
-              padding: EdgeInsets.only(top: 1.8 * kToolbarHeight.sp),
+              padding: const EdgeInsets.only(top: 1.8 * kToolbarHeight),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
