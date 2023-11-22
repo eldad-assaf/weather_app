@@ -134,7 +134,7 @@ class RealtimeWeather extends StatelessWidget {
                               Colors.black,
                               FontWeight.w300,
                             ),
-                            text: "Today",
+                            text: "Now",
                           ),
                           SizedBox(
                             height: 50.sp,
@@ -142,7 +142,7 @@ class RealtimeWeather extends StatelessWidget {
                           ReusableText(
                             style: appStyle(
                               70,
-                              Colors.black,
+                              Colors.white,
                               FontWeight.bold,
                             ),
                             text: "${state.realtimeWeather?.tempC}C",
