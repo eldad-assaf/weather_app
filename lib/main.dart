@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                   useMaterial3: true,
                 ),
                 debugShowCheckedModeBanner: false,
-                home: const CustomPageView(),
+                home: const Home(),
               ),
             ),
           );
@@ -91,22 +91,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return const CustomPageView();
-  }
-}
-
-class CustomPageView extends StatelessWidget {
-  const CustomPageView({super.key});
 
   @override
   Widget build(BuildContext context) {
