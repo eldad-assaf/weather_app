@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';

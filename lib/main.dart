@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
+import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/injection_container.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
@@ -26,13 +27,11 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    print(change.toString());
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    print(transition.toString());
   }
 }
 
@@ -186,9 +185,7 @@ class Home extends StatelessWidget {
           controller: controller,
           children: const <Widget>[
             RealtimeWeather(),
-            Center(
-              child: Text('Second Page'),
-            ),
+            MapView(),
             Center(
               child: Text('Third Page'),
             ),
