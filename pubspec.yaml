@@ -11,6 +11,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^5.3.3
   equatable: ^2.0.5
+  firebase_core: ^2.23.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
