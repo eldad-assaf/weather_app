@@ -54,11 +54,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapView extends StatelessWidget {
   const MapView({super.key});
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(31.42796133580664, -132.08832357078792),
+    target: LatLng(32.1848960, 34.9141710),
     zoom: 14.4746,
   );
   @override
   Widget build(BuildContext context) {
-    return const GoogleMap(initialCameraPosition: _kGooglePlex);
+    return const GoogleMap(
+      initialCameraPosition: _kGooglePlex,
+      scrollGesturesEnabled: true,
+    );
   }
 }
