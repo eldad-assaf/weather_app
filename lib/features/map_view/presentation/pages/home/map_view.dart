@@ -49,6 +49,8 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatelessWidget {
@@ -59,9 +61,31 @@ class MapView extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    return const GoogleMap(
-      initialCameraPosition: _kGooglePlex,
-      scrollGesturesEnabled: true,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: [
+            const GoogleMap(
+              initialCameraPosition: _kGooglePlex,
+              scrollGesturesEnabled: true,
+            ),
+            Positioned(
+              top: 16,
+              left: 16,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.arrowLeft,
+                  size: 30.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

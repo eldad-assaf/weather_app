@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
+import 'package:weather_app/components/reuseable_text.dart';
+import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
@@ -107,7 +109,9 @@ class Home extends StatelessWidget {
             elevation: 0,
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarBrightness: Brightness.dark),
-            title: const Text('weather'),
+            title: ReusableText(
+                text: 'Weather',
+                style: appStyle(25, Colors.white, FontWeight.w300)),
             actions: [
               BlocListener<DevicePositionBloc, DevicePoditionState>(
                 listener: (context, state) {
@@ -173,12 +177,25 @@ class Home extends StatelessWidget {
                         child: FaIcon(
                           FontAwesomeIcons.locationArrow,
                           size: 33.sp,
+                          color: Colors.white,
                         ),
                       ),
                     );
                   },
                 ),
               ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return const MapView();
+                    }));
+                  },
+                  icon: FaIcon(
+                    FontAwesomeIcons.map,
+                    size: 33.sp,
+                    color: Colors.white,
+                  ))
             ],
           ),
           body: PageView(
@@ -186,9 +203,9 @@ class Home extends StatelessWidget {
             controller: controller,
             children: const <Widget>[
               RealtimeWeather(),
-              MapView(),
+              //  MapView(),
               Center(
-                child: Text('Third Page'),
+                child: Text('Second Page'),
               ),
             ],
           )),
