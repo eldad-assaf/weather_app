@@ -15,7 +15,7 @@ extension PostitionAsString on Position {
 }
 
 class DevicePositionBloc
-    extends Bloc<DevicePositionEvent, DevicePoditionState> {
+    extends Bloc<DevicePositionEvent, DevicePositionState> {
   final DeterminePositionUseCase _determinePositionUseCase;
   final SaveLastPositionUseCase _saveLastPositionUseCase;
 
@@ -26,7 +26,7 @@ class DevicePositionBloc
   }
 
   void onDeterminePosition(
-      DeterminePositionEvent event, Emitter<DevicePoditionState> emit) async {
+      DeterminePositionEvent event, Emitter<DevicePositionState> emit) async {
     try {
       emit(const DevicePositionLoading());
       bool isLocationServiceEnabled =

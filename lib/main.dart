@@ -113,7 +113,7 @@ class Home extends StatelessWidget {
                 text: 'Weather',
                 style: appStyle(25, Colors.white, FontWeight.w300)),
             actions: [
-              BlocListener<DevicePositionBloc, DevicePoditionState>(
+              BlocListener<DevicePositionBloc, DevicePositionState>(
                 listener: (context, state) {
                   if (state is DevicePositionDone) {
                     BlocProvider.of<RealtimeWeatherBloc>(context).add(
@@ -159,7 +159,7 @@ class Home extends StatelessWidget {
                     });
                   }
                 },
-                child: BlocBuilder<DevicePositionBloc, DevicePoditionState>(
+                child: BlocBuilder<DevicePositionBloc, DevicePositionState>(
                   builder: (context, state) {
                     if (state is DevicePositionLoading) {
                       return const Padding(
