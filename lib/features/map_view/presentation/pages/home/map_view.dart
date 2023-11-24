@@ -55,6 +55,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
+import 'package:weather_app/main.dart';
 
 class MapView extends StatelessWidget {
   const MapView({super.key});
@@ -67,13 +68,17 @@ class MapView extends StatelessWidget {
     return BlocListener<DevicePositionBloc, DevicePositionState>(
       listener: (context, state) {
         if (state is DevicePositionDone) {
+          print(state);
           print('state is DevicePositionDone');
           BlocProvider.of<CameraPositionBloc>(context)
               .add(DetermineInitialCameraPositionEvent(state.position));
+        } else {
+          print(state);
         }
       },
       child: BlocBuilder<CameraPositionBloc, CameraPositionState>(
         builder: (context, state) {
+          print(state);
           if (state is CameraPositionInitial) {
             BlocProvider.of<DevicePositionBloc>(context)
                 .add(const DeterminePositionEvent());
@@ -94,10 +99,25 @@ class MapView extends StatelessWidget {
                       left: 16,
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          //Navigator.pop(context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Home()));
                         },
                         child: FaIcon(
                           FontAwesomeIcons.arrowLeft,
+                          size: 30.sp,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 16,
+                      right: 16,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: FaIcon(
+                          FontAwesomeIcons.locationArrow,
                           size: 30.sp,
                         ),
                       ),
