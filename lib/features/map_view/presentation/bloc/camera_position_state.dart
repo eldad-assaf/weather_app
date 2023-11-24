@@ -1,37 +1,22 @@
-// part of 'device_location_bloc.dart';
+part of 'camera_position_bloc.dart';
 
-// abstract class DevicePositionState extends Equatable {
-//   final String? position;
-//   final Object? error;
-//   const DevicePositionState({this.position, this.error});
+abstract class CameraPositionState extends Equatable {
+  final CameraPosition? cameraPosition;
+  final Object? error;
 
-//   @override
-//   List<Object?> get props => [position, error];
-// }
+  const CameraPositionState({this.cameraPosition, this.error});
 
-// final class DeviceLocationInitial extends DevicePositionState {}
+  @override
+  List<Object?> get props => [cameraPosition, error];
+}
 
-// class DevicePositionLoading extends DevicePositionState {
-//   const DevicePositionLoading();
-// }
+final class CameraPositionInitial extends CameraPositionState {}
 
-// class DevicePositionDone extends DevicePositionState {
-//   const DevicePositionDone(String position) : super(position: position);
-// }
+class CameraPositionDone extends CameraPositionState {
+  const CameraPositionDone(CameraPosition cameraPosition)
+      : super(cameraPosition: cameraPosition);
+}
 
-// class DeviceLocationServicesNotEnabled extends DevicePositionState {
-//   const DeviceLocationServicesNotEnabled(Object error) : super(error: error);
-// }
-
-// class DeviceLocationPermissionsDeniedForever extends DevicePositionState {
-//   const DeviceLocationPermissionsDeniedForever(Object error)
-//       : super(error: error);
-// }
-
-// class DeviceLocationPermissionsDenied extends DevicePositionState {
-//   const DeviceLocationPermissionsDenied(Object error) : super(error: error);
-// }
-
-// class DeviceLocationError extends DevicePositionState {
-//   const DeviceLocationError(Object error) : super(error: error);
-// }
+class CameraPositionError extends CameraPositionState {
+  const CameraPositionError(Object error) : super(error: error);
+}

@@ -1,14 +1,8 @@
-// part of 'device_location_bloc.dart';
+part of 'camera_position_bloc.dart';
 
-// abstract class DevicePositionEvent extends Equatable {
-//   const DevicePositionEvent();
+sealed class CameraPositionEvent extends Equatable {
+  const CameraPositionEvent();
 
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class DeterminePositionEvent extends DevicePositionEvent {
-//   const DeterminePositionEvent();
-// }
-
-
+  @override
+  List<Object> get props => [];
+}
