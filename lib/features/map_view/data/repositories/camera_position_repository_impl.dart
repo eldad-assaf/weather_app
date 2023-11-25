@@ -4,12 +4,11 @@ import 'package:weather_app/features/map_view/domain/repositories/camera_poistio
 class CameraPositionRepositoryImpl extends CameraPositionRepository {
   @override
   Future<CameraPosition> determineInitialCameraPosition(String position) async {
-    print('position from repo  $position');
-
     final latlng = parseLatLng(position);
-    print(latlng);
     return CameraPosition(
-        target: latlng ?? const LatLng(37.4219983, -122.0840000), zoom: 14);
+      target: latlng ?? const LatLng(37.4219983, -122.0840000),
+      zoom: 14.4746,
+    );
   }
 }
 
