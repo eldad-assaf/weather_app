@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
@@ -16,12 +17,28 @@ class RealtimeWeatherBloc
 
   void onFetchRealtimeWeather(FetchRealtimeWeatherEvent event,
       Emitter<RealtimeWeatherState> emit) async {
+    String? positionToFetchTheWeather;
     emit(const RealtimeWeatherLoading());
-    print(event.position);
-    final dataState = await _realtimeWeatherUseCase(
-        //if the position is null because the user did not use the location feature
-        //then
-        params: event.position ?? "32.084304, 34.772472");
+
+    if (event.position == null) {
+      //on app start the event is triggerd with a null position (String)
+      //checks for last position from sf
+      final sf = await SharedPreferences.getInstance();
+      final lastPosition = sf.getString('position');
+      if (lastPosition != null) {
+        positionToFetchTheWeather = lastPosition;
+      } else {
+        positionToFetchTheWeather = "32.084304, 34.772472"; //  Tel-aviv
+      }
+    } else {
+      //event was triggrerd with the users position
+      positionToFetchTheWeather = event.position;
+    }
+
+    print(
+        'the FetchRealtimeWeatherEvent was triggerd with this position : $positionToFetchTheWeather ');
+    final dataState =
+        await _realtimeWeatherUseCase(params: positionToFetchTheWeather);
     if (dataState is DataSucess && dataState.data != null) {
       emit(RealtimeWeatherDone(dataState.data!));
     }

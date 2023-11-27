@@ -9,6 +9,8 @@ import 'package:weather_app/main.dart';
 
 //until here there is no need for any location services or permissions
 
+
+
 class MapView extends StatelessWidget {
   const MapView({super.key});
 

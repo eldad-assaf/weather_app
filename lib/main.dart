@@ -46,52 +46,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<String?> _getLastPositionFromSharedPrefs() async {
-    final sf = await SharedPreferences.getInstance();
-    return sf.getString("position");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-      future: _getLastPositionFromSharedPrefs(),
-      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider<RealtimeWeatherBloc>(
-                create: (context) =>
-                    sl()..add(FetchRealtimeWeatherEvent(snapshot.data)),
-              ),
-              BlocProvider<DevicePositionBloc>(
-                create: (context) => sl(),
-              ),
-              BlocProvider<CameraPositionBloc>(
-                create: (context) => sl(),
-              ),
-            ],
-            child: ScreenUtilInit(
-              designSize: const Size(393, 851), // PIXEL 5
-              child: MaterialApp(
-                theme: ThemeData(
-                  colorScheme:
-                      ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                  useMaterial3: true,
-                ),
-                debugShowCheckedModeBanner: false,
-                home: const Home(),
-              ),
-            ),
-          );
-        } else {
-          return Container();
-        }
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<RealtimeWeatherBloc>(
+          create: (context) => sl()..add(const FetchRealtimeWeatherEvent(null)),
+        ),
+        BlocProvider<DevicePositionBloc>(
+          create: (context) => sl(),
+        ),
+        BlocProvider<CameraPositionBloc>(
+          create: (context) => sl(),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(393, 851), // PIXEL 5
+        child: MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          home: const Home(),
+        ),
+      ),
     );
   }
 }
