@@ -2,9 +2,9 @@
 
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/features/device_location/domain/repositories/device_location_repository.dart';
+import 'package:weather_app/features/device_position/domain/repositories/device_location_repository.dart';
 
-class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
+class DevicePositionRepositoryImpl extends DevicePositionRepository {
   @override
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -47,6 +47,7 @@ class DeviceLocationRepositoryImpl extends DeviceLocationRepository {
     try {
       final sf = await SharedPreferences.getInstance();
       await sf.setString('position', position);
+      print('set!');
     } catch (e) {
       print(e.toString());
     }

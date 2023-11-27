@@ -17,6 +17,7 @@ class CameraPositionBloc
   void onDetermineInitialCameraPosition(
       DetermineInitialCameraPositionEvent event,
       Emitter<CameraPositionState> emit) async {
+    print('onDetermineInitialCameraPosition position : ${event.position}');
     try {
       final cameraPosition =
           await _determineCameraPositionUseCase(params: event.position);

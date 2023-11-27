@@ -1,4 +1,4 @@
-part of 'device_location_bloc.dart';
+part of 'device_position_bloc.dart';
 
 abstract class DevicePositionState extends Equatable {
   final String? position;

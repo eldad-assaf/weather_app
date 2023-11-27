@@ -13,7 +13,7 @@ import 'package:weather_app/features/realtime_weather/domain/repositories/realti
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 
 import 'features/device_location/domain/usecases/determine_position.dart';
-import 'features/device_location/presentation/bloc/device_location_bloc.dart';
+import 'features/device_location/presentation/bloc/device_position_bloc.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
 final sl = GetIt.instance;

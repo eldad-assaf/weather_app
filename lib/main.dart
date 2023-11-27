@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/components/reuseable_text.dart';
 import 'package:weather_app/components/text_style.dart';
-import 'package:weather_app/features/device_location/presentation/bloc/device_location_bloc.dart';
+import 'package:weather_app/features/device_location/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
