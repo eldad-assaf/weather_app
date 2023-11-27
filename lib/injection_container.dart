@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:weather_app/features/device_location/data/repositories/device_location_repository_impl.dart';
-import 'package:weather_app/features/device_location/domain/repositories/device_location_repository.dart';
-import 'package:weather_app/features/device_location/domain/usecases/save_last_position.dart';
+import 'package:weather_app/features/device_position/data/repositories/device_location_repository_impl.dart';
+import 'package:weather_app/features/device_position/domain/repositories/device_location_repository.dart';
+import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
+import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
+import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
+
 import 'package:weather_app/features/map_view/data/repositories/camera_position_repository_impl.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
@@ -12,8 +15,7 @@ import 'package:weather_app/features/realtime_weather/data/repositories/realtime
 import 'package:weather_app/features/realtime_weather/domain/repositories/realtime_weather_repository.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
 
-import 'features/device_location/domain/usecases/determine_position.dart';
-import 'features/device_location/presentation/bloc/device_position_bloc.dart';
+
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
 final sl = GetIt.instance;
@@ -27,8 +29,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RealtimeWeatherRepository>(
       RealtimeWeatherRepositoryImpl(sl()));
 
-  sl.registerSingleton<DeviceLocationRepository>(
-      DeviceLocationRepositoryImpl());
+  sl.registerSingleton<DevicePositionRepository>(
+      DevicePositionRepositoryImpl());
 
   sl.registerSingleton<CameraPositionRepository>(
       CameraPositionRepositoryImpl());
