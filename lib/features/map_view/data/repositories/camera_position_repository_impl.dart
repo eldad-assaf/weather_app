@@ -2,13 +2,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 
 class CameraPositionRepositoryImpl extends CameraPositionRepository {
-
-  
   @override
   Future<CameraPosition> determineInitialCameraPosition(String position) async {
     final latlng = parseLatLng(position);
     return CameraPosition(
-      target: latlng ?? const LatLng(37.4219983, -122.0840000),
+      target: latlng ?? const LatLng(32.084304, 34.772472), //  Tel-aviv
       zoom: 14.4746,
     );
   }

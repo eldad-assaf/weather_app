@@ -17,15 +17,16 @@ class CameraPositionBloc
   }
 
   void onDetermineInitialCameraPosition(
-      DetermineInitialCameraPositionEvent event,
-      Emitter<CameraPositionState> emit) async {
-    print('onDetermineInitialCameraPosition position : ${event.position}');
+    DetermineInitialCameraPositionEvent event,
+    Emitter<CameraPositionState> emit,
+  ) async {
     try {
+      emit(CameraPositionLoading());
       final cameraPosition =
           await _determineCameraPositionUseCase(params: event.position);
-      print('new camera position from bloc : ${cameraPosition.toString()}');
       emit(CameraPositionDone(cameraPosition));
     } catch (e) {
+      emit(CameraPositionError(e));
       print(e.toString());
     }
   }

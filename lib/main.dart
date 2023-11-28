@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/components/reuseable_text.dart';
 import 'package:weather_app/components/text_style.dart';
@@ -95,6 +96,14 @@ class Home extends StatelessWidget {
                 text: 'Weather',
                 style: appStyle(25, Colors.white, FontWeight.w300)),
             actions: [
+              IconButton(
+                  color: Colors.red,
+                  onPressed: () async {
+                    SharedPreferences sf =
+                        await SharedPreferences.getInstance();
+                    await sf.clear();
+                  },
+                  icon: const Icon(Icons.delete)),
               BlocListener<DevicePositionBloc, DevicePositionState>(
                 listener: (context, state) {
                   if (state is DevicePositionDone) {

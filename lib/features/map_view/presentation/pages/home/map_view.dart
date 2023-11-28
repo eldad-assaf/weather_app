@@ -1,209 +1,142 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
-import 'package:weather_app/main.dart';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
 
   @override
-  State<MapView> createState() => _MapViewState();
+  State<MapView> createState() => MapViewState();
 }
 
-class _MapViewState extends State<MapView> {
-  Future<String?> getLastPositionFromSf() async {
-    final sf = await SharedPreferences.getInstance();
-    return sf.getString('position');
-  }
+class MapViewState extends State<MapView> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
 
-  // final CameraPosition(
-  //                             target = const LatLng(32.1848960, 34.9141710),
-  //                             zoom = 14.8);
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+    bearing: 192.8334901395799,
+    target: LatLng(37.43296265331129, -122.08832357078792),
+    tilt: 59.440717697143555,
+    zoom: 19.151926040649414,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DevicePositionBloc, DevicePositionState>(
-      listener: (context, state) {
-        if (state is DevicePositionDone) {
-          print('DevicePositionState : DevicePositionDone  ');
-          context
-              .read<CameraPositionBloc>()
-              .add(DetermineInitialCameraPositionEvent(state.position));
-        }
-      },
-      builder: (context, state) {
-        return BlocConsumer<CameraPositionBloc, CameraPositionState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return SafeArea(
-              child: Scaffold(
-                body: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    children: [
-                      state is CameraPositionDone
-                          ? GoogleMap(
-                              initialCameraPosition: state.cameraPosition!)
-                          : Container(),
-                      state is CameraPositionInitial
-                          ? const GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                  target: LatLng(32.1848960, 34.9141710)))
-                          : Container(),
-                      Positioned(
-                        top: 16,
-                        left: 16,
-                        child: GestureDetector(
-                          onTap: () {
-                            //Navigator.pop(context);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()));
-                          },
-                          child: FaIcon(
-                            FontAwesomeIcons.arrowLeft,
-                            size: 30.sp,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 16,
-                        right: 16,
-                        child: GestureDetector(
-                          onTap: () {
-                            context
-                                .read<DevicePositionBloc>()
-                                .add(const DeterminePositionEvent());
-                          },
-                          child: FaIcon(
-                            FontAwesomeIcons.locationArrow,
-                            size: 30.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        actions: [
+          BlocBuilder<CameraPositionBloc, CameraPositionState>(
+            builder: (context, state) {
+              return IconButton(
+                onPressed: () {
+                  _goToTheCameraPosition(
+                      cameraPosition: state.cameraPosition ?? _kGooglePlex);
+                  // context.read<CameraPositionBloc>().add(
+                  //     const DetermineInitialCameraPositionEvent(
+                  //         '37.43296265331129, -122.08832357078792'));
+                },
+                icon: const Icon(Icons.location_searching_rounded),
+              );
+            },
+          ),
+        ],
+      ),
+      body: BlocBuilder<CameraPositionBloc, CameraPositionState>(
+        builder: (context, state) {
+          print(state.toString());
+
+          return GoogleMap(
+            mapType: MapType.hybrid,
+            initialCameraPosition: state.cameraPosition ?? _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              print('map created!');
+              _controller.complete(controller);
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _goToTheLake,
+        label: const Text('To the lake!'),
+        icon: const Icon(Icons.directions_boat),
+      ),
     );
   }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  }
+
+  Future<void> _goToTheCameraPosition(
+      {required CameraPosition cameraPosition}) async {
+    final GoogleMapController controller = await _controller.future;
+    await controller
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
 }
+
+
+
+
+// import 'dart:async';
+
+// import 'package:flutter/material.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+
 
 // class MapView extends StatefulWidget {
 //   const MapView({super.key});
 
 //   @override
-//   State<MapView> createState() => _MapViewState();
+//   State<MapView> createState() => MapViewState();
 // }
 
-// class _MapViewState extends State<MapView> {
-//   Future<String?> getLastPositionFromSf() async {
-//     final sf = await SharedPreferences.getInstance();
-//     return sf.getString('position');
-//   }
+// class MapViewState extends State<MapView> {
+//   final Completer<GoogleMapController> _controller =
+//       Completer<GoogleMapController>();
 
-//   // final CameraPosition(
-//   //                             target = const LatLng(32.1848960, 34.9141710),
-//   //                             zoom = 14.8);
+//   static const CameraPosition _kGooglePlex = CameraPosition(
+//     target: LatLng(37.42796133580664, -122.085749655962),
+//     zoom: 14.4746,
+//   );
+
+//   static const CameraPosition _kLake = CameraPosition(
+//       bearing: 192.8334901395799,
+//       target: LatLng(37.43296265331129, -122.08832357078792),
+//       tilt: 59.440717697143555,
+//       zoom: 19.151926040649414);
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         body: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Stack(
-//             children: [
-//               BlocConsumer<DevicePositionBloc, DevicePositionState>(
-//                 listener: (context, state) {
-//                   if (state is DevicePositionDone) {
-//                     print('DevicePositionState : DevicePositionDone  ');
-//                     context.read<CameraPositionBloc>().add(
-//                         DetermineInitialCameraPositionEvent(state.position));
-//                   }
-//                 },
-//                 builder: (context, state) {
-//                   return BlocConsumer<CameraPositionBloc, CameraPositionState>(
-//                     listener: (context, state) {
-//                       print('CameraPositionState : ${state.cameraPosition}  ');
-//                       // TODO: implement listener
-//                     },
-//                     builder: (context, state) {
-//                       if (state is CameraPositionInitial) {
-//                         const CameraPosition initialCameraPosition =
-//                             CameraPosition(
-//                           target: LatLng(32.1848960, 34.9141710),
-//                           zoom: 10,
-//                         );
-//                         return Container(
-//                           color: Colors.white,
-//                         );
-//                         // return const GoogleMap(
-//                         //     initialCameraPosition: initialCameraPosition);
-//                       } else if (state is CameraPositionDone) {
-//                         print('state is CameraPositionDone ');
-//                         return Container(
-//                           color: Colors.green,
-//                         );
-//                         // return const GoogleMap(
-//                         //   initialCameraPosition: CameraPosition(
-//                         //     target: LatLng(30.1848960, 32.9141710),
-//                         //   ),
-//                         //   scrollGesturesEnabled: true,
-//                         // );
-//                       } else {
-//                         return Container(
-//                           color: Colors.green,
-//                         );
-//                       }
-//                     },
-//                   );
-//                 },
-//               ),
-//               Positioned(
-//                 top: 16,
-//                 left: 16,
-//                 child: GestureDetector(
-//                   onTap: () {
-//                     //Navigator.pop(context);
-//                     Navigator.pushReplacement(context,
-//                         MaterialPageRoute(builder: (context) => const Home()));
-//                   },
-//                   child: FaIcon(
-//                     FontAwesomeIcons.arrowLeft,
-//                     size: 30.sp,
-//                   ),
-//                 ),
-//               ),
-//               Positioned(
-//                 top: 16,
-//                 right: 16,
-//                 child: GestureDetector(
-//                   onTap: () {
-//                     context
-//                         .read<DevicePositionBloc>()
-//                         .add(const DeterminePositionEvent());
-//                   },
-//                   child: FaIcon(
-//                     FontAwesomeIcons.locationArrow,
-//                     size: 30.sp,
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
+//     return Scaffold(
+//       body: GoogleMap(
+//         mapType: MapType.hybrid,
+//         initialCameraPosition: _kGooglePlex,
+//         onMapCreated: (GoogleMapController controller) {
+//           _controller.complete(controller);
+//         },
+//       ),
+//       floatingActionButton: FloatingActionButton.extended(
+//         onPressed: _goToTheLake,
+//         label: const Text('To the lake!'),
+//         icon: const Icon(Icons.directions_boat),
 //       ),
 //     );
+//   }
+
+//   Future<void> _goToTheLake() async {
+//     final GoogleMapController controller = await _controller.future;
+//     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
 //   }
 // }

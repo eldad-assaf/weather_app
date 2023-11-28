@@ -35,8 +35,6 @@ class RealtimeWeatherBloc
       positionToFetchTheWeather = event.position;
     }
 
-    print(
-        'the FetchRealtimeWeatherEvent was triggerd with this position : $positionToFetchTheWeather ');
     final dataState =
         await _realtimeWeatherUseCase(params: positionToFetchTheWeather);
     if (dataState is DataSucess && dataState.data != null) {
