@@ -10,7 +10,10 @@ abstract class CameraPositionState extends Equatable {
   List<Object?> get props => [cameraPosition, error];
 }
 
-final class CameraPositionInitial extends CameraPositionState {}
+final class CameraPositionInitial extends CameraPositionState {
+  
+}
+
 
 class CameraPositionDone extends CameraPositionState {
   const CameraPositionDone(CameraPosition cameraPosition)

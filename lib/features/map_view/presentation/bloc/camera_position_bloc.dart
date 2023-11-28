@@ -23,6 +23,7 @@ class CameraPositionBloc
     try {
       final cameraPosition =
           await _determineCameraPositionUseCase(params: event.position);
+      print('new camera position from bloc : ${cameraPosition.toString()}');
       emit(CameraPositionDone(cameraPosition));
     } catch (e) {
       print(e.toString());
