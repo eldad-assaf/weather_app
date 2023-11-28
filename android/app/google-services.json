@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "428624308077",
+    "project_id": "weather-app-with-flutter",
+    "storage_bucket": "weather-app-with-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428624308077:android:f50f91a886c3ee8244dc64",
+        "android_client_info": {
+          "package_name": "com.example.weather_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcd_gJ1oOgOQ-TbJN1dXP1NkTfqzEr5vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
