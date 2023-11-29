@@ -177,6 +177,9 @@ class Home extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
+                    context
+                        .read<CameraPositionBloc>()
+                        .add(const DetermineInitialCameraPositionEvent());
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (BuildContext context) {
                       return const MapView();

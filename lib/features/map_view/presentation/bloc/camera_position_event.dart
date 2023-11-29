@@ -9,5 +9,8 @@ abstract class CameraPositionEvent extends Equatable {
 }
 
 class DetermineInitialCameraPositionEvent extends CameraPositionEvent {
-  const DetermineInitialCameraPositionEvent(String? position):super(position: position);
+  const DetermineInitialCameraPositionEvent():super();
+}
+class DetermineCameraPositionEvent extends CameraPositionEvent {
+  const DetermineCameraPositionEvent(String? position):super(position: position);
 }
