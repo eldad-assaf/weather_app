@@ -36,9 +36,9 @@ class DevicePositionBloc
             'Location services are off'));
       }
       final position = await _determinePositionUseCase();
-      await _saveLastPositionUseCase(params: position.asString());
+      // await _saveLastPositionUseCase(params: position.asString());
 
-      emit(DevicePositionDone(position.asString()));
+      emit(DevicePositionDone(position));
     } catch (e) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {

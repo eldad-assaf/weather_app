@@ -1,7 +1,11 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+import 'dart:ffi';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
@@ -30,7 +34,11 @@ class CameraPositionBloc
       final lng = sf.getString('lng');
       if (lat != null && lng != null) {
         //build camera position for last place
-        final cameraPosition = _buildCameraPoistion(lat: lat, lng: lng);
+        print(lat);
+        print(lng);
+
+        final cameraPosition = _buildCameraPoistion(
+            lat: double.parse(lat), lng: double.parse(lng));
         emit(CameraPositionDone(cameraPosition));
       } else {
         //build camera position for Jerusalem (default)
@@ -49,14 +57,26 @@ class CameraPositionBloc
     Emitter<CameraPositionState> emit,
   ) async {
     try {
-      //update sf 
+      emit(CameraPositionLoading());
+      //save the device position to sf
+      final sf = await SharedPreferences.getInstance();
+      await sf.setString('lat', event.position!.latitude.toString());
+      await sf.setString('lng', event.position!.longitude.toString());
+      final cameraPosition = _buildCameraPoistion(
+          lat: event.position!.latitude, lng: event.position!.longitude);
+
+      emit(CameraPositionDone(cameraPosition));
     } catch (e) {
+      print('error');
       emit(CameraPositionError(e));
       print(e.toString());
     }
   }
 
-  CameraPosition _buildCameraPoistion({required lat, required lng}) {
+  CameraPosition _buildCameraPoistion({
+    required double lat,
+    required double lng,
+  }) {
     return CameraPosition(target: LatLng(lat, lng), zoom: 13);
   }
 }

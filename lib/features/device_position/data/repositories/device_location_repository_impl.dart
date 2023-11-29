@@ -46,7 +46,7 @@ class DevicePositionRepositoryImpl extends DevicePositionRepository {
   Future<void> savePositionInSf(String position) async {
     try {
       final sf = await SharedPreferences.getInstance();
-      await sf.setString('position', position);
+      await sf.setString('lat', position);
       print('set!');
     } catch (e) {
       print(e.toString());

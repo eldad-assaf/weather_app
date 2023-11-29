@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/main.dart';
 
@@ -15,10 +16,7 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-
-
+  GoogleMapController? mapController;
 
   static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -31,29 +29,46 @@ class MapViewState extends State<MapView> {
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
-          BlocBuilder<CameraPositionBloc, CameraPositionState>(
-            builder: (context, state) {
-              if (state is CameraPositionInitial) {
-                //should not happen
-                return const Center(child: Text('CameraPositionInitial'));
-              }
-              if (state is CameraPositionLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is CameraPositionError) {
-                return const Center(child: Text('CameraPositionError'));
-              } else {
-                return GoogleMap(
-                  mapType: MapType.hybrid,
-                  initialCameraPosition: state.cameraPosition!,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                );
+          BlocListener<DevicePositionBloc, DevicePositionState>(
+            listener: (context, state) {
+              if (state is DevicePositionDone) {
+                context
+                    .read<CameraPositionBloc>()
+                    .add(DetermineCameraPositionEvent(state.position));
               }
             },
+            child: BlocBuilder<CameraPositionBloc, CameraPositionState>(
+              builder: (context, state) {
+                if (state is CameraPositionInitial) {
+                  //should not happen
+                  return const Center(child: Text('CameraPositionInitial'));
+                }
+                if (state is CameraPositionLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is CameraPositionError) {
+                  return const Center(child: Text('CameraPositionError'));
+                } else if (state is CameraPositionDone) {
+                  return GoogleMap(
+                      mapType: MapType.hybrid,
+                      initialCameraPosition: state.cameraPosition!,
+                      onMapCreated: (GoogleMapController controller) async {
+                        // Store the controller for later use
+                        mapController = controller;
+
+                        // Animate the camera to the initial position
+                        mapController!.animateCamera(CameraUpdate.newLatLngZoom(
+                            state.cameraPosition!.target, 15.0));
+                      });
+                } else {
+                  return Container(
+                    color: Colors.red,
+                  );
+                }
+              },
+            ),
           ),
           Positioned(
             top: 16,
@@ -75,7 +90,11 @@ class MapViewState extends State<MapView> {
             top: 16,
             right: 16,
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                context
+                    .read<DevicePositionBloc>()
+                    .add(const DeterminePositionEvent());
+              },
               child: FaIcon(
                 FontAwesomeIcons.locationArrow,
                 size: 30.sp,
@@ -85,7 +104,7 @@ class MapViewState extends State<MapView> {
           ),
         ]),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: _goToTheLake,
+          onPressed: () {},
           label: const Text('To the lake!'),
           icon: const Icon(Icons.directions_boat),
         ),
@@ -93,10 +112,33 @@ class MapViewState extends State<MapView> {
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
+  // Future<void> _goToTheLake() async {
+  //   final GoogleMapController controller = await _controller.future;
+  //   await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  // }
+
+  // Future<void> _goToThePlace({required CameraPosition cameraPosition}) async {
+  //   try {
+  //     final GoogleMapController controller = await _controller.future;
+  //     await controller
+  //         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+
+//   Future<void> _goToTheCameraPosition(
+//     {required CameraPosition cameraPosition}) async {
+//   try {
+//     print('_goToTheCameraPosition : ${cameraPosition.target.latitude}');
+//     print('_goToTheCameraPosition : ${cameraPosition.target.longitude}');
+//     final GoogleMapController controller = await _controller.future;
+//     await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+//     print('Animation completed');
+//   } catch (e) {
+//     print('Error in _goToTheCameraPosition: $e');
+//   }
+// }
 }
 
 

@@ -1,7 +1,7 @@
 part of 'camera_position_bloc.dart';
 
 abstract class CameraPositionEvent extends Equatable {
-  final String? position;
+  final Position? position;
   const CameraPositionEvent({this.position});
 
   @override
@@ -12,5 +12,5 @@ class DetermineInitialCameraPositionEvent extends CameraPositionEvent {
   const DetermineInitialCameraPositionEvent():super();
 }
 class DetermineCameraPositionEvent extends CameraPositionEvent {
-  const DetermineCameraPositionEvent(String? position):super(position: position);
+  const DetermineCameraPositionEvent(Position? position):super(position: position);
 }
