@@ -10,8 +10,6 @@ class DetermineInitialCameraPositionUseCase implements UseCase<CameraPosition, v
   Future<CameraPosition> call({void params}) {
   return _cameraPositionRepository.determineInitialCameraPosition();
   }
-
-
 }
 
 

@@ -106,7 +106,7 @@ class MapViewState extends State<MapView> {
         ]),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {},
-          label: const Text('To the lake!'),
+          label: const Text('Get weather'),
           icon: const Icon(Icons.directions_boat),
         ),
       ),
