@@ -16,28 +16,27 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
-  GoogleMapController? mapController;
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
+  GoogleMapController? _mapController;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
-          BlocListener<DevicePositionBloc, DevicePositionState>(
-            listener: (context, state) {
-              if (state is DevicePositionDone) {
-                context
-                    .read<CameraPositionBloc>()
-                    .add(DetermineCameraPositionEvent(state.position));
-              }
-            },
-            child: BlocBuilder<CameraPositionBloc, CameraPositionState>(
+          BlocConsumer<DevicePositionBloc, DevicePositionState>(
+              listener: (context, state) {
+            if (state is DevicePositionDone) {
+              context
+                  .read<CameraPositionBloc>()
+                  .add(DetermineCameraPositionEvent(state.position));
+            }
+          }, builder: (context, state) {
+            if (state is DevicePositionLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            return BlocBuilder<CameraPositionBloc, CameraPositionState>(
               builder: (context, state) {
                 if (state is CameraPositionInitial) {
                   //should not happen
@@ -49,18 +48,20 @@ class MapViewState extends State<MapView> {
                   );
                 }
                 if (state is CameraPositionError) {
-                  return const Center(child: Text('CameraPositionError'));
+                  return Center(
+                      child: Text(
+                          'CameraPositionError ${state.error.toString()}'));
                 } else if (state is CameraPositionDone) {
                   return GoogleMap(
                       mapType: MapType.hybrid,
                       initialCameraPosition: state.cameraPosition!,
                       onMapCreated: (GoogleMapController controller) async {
                         // Store the controller for later use
-                        mapController = controller;
-
-                        // Animate the camera to the initial position
-                        mapController!.animateCamera(CameraUpdate.newLatLngZoom(
-                            state.cameraPosition!.target, 15.0));
+                        _mapController = controller;
+                        _goToThePlace(cameraPosition: state.cameraPosition!);
+                        // _mapController!.animateCamera(
+                        //     CameraUpdate.newCameraPosition(
+                        //         state.cameraPosition!));
                       });
                 } else {
                   return Container(
@@ -68,8 +69,8 @@ class MapViewState extends State<MapView> {
                   );
                 }
               },
-            ),
-          ),
+            );
+          }),
           Positioned(
             top: 16,
             left: 16,
@@ -112,79 +113,12 @@ class MapViewState extends State<MapView> {
     );
   }
 
-  // Future<void> _goToTheLake() async {
-  //   final GoogleMapController controller = await _controller.future;
-  //   await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  // }
-
-  // Future<void> _goToThePlace({required CameraPosition cameraPosition}) async {
-  //   try {
-  //     final GoogleMapController controller = await _controller.future;
-  //     await controller
-  //         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
-
-//   Future<void> _goToTheCameraPosition(
-//     {required CameraPosition cameraPosition}) async {
-//   try {
-//     print('_goToTheCameraPosition : ${cameraPosition.target.latitude}');
-//     print('_goToTheCameraPosition : ${cameraPosition.target.longitude}');
-//     final GoogleMapController controller = await _controller.future;
-//     await controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-//     print('Animation completed');
-//   } catch (e) {
-//     print('Error in _goToTheCameraPosition: $e');
-//   }
-// }
+  Future<void> _goToThePlace({required CameraPosition cameraPosition}) async {
+    try {
+      await _mapController!
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
-
-
-
-// class MapView extends StatefulWidget {
-//   const MapView({super.key});
-
-//   @override
-//   State<MapView> createState() => MapViewState();
-// }
-
-// class MapViewState extends State<MapView> {
-//   final Completer<GoogleMapController> _controller =
-//       Completer<GoogleMapController>();
-
-//   static const CameraPosition _kGooglePlex = CameraPosition(
-//     target: LatLng(37.42796133580664, -122.085749655962),
-//     zoom: 14.4746,
-//   );
-
-//   static const CameraPosition _kLake = CameraPosition(
-//       bearing: 192.8334901395799,
-//       target: LatLng(37.43296265331129, -122.08832357078792),
-//       tilt: 59.440717697143555,
-//       zoom: 19.151926040649414);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: GoogleMap(
-//         mapType: MapType.hybrid,
-//         initialCameraPosition: _kGooglePlex,
-//         onMapCreated: (GoogleMapController controller) {
-//           _controller.complete(controller);
-//         },
-//       ),
-//       floatingActionButton: FloatingActionButton.extended(
-//         onPressed: _goToTheLake,
-//         label: const Text('To the lake!'),
-//         icon: const Icon(Icons.directions_boat),
-//       ),
-//     );
-//   }
-
-//   Future<void> _goToTheLake() async {
-//     final GoogleMapController controller = await _controller.future;
-//     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-//   }
-// }
