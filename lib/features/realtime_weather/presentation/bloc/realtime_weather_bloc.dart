@@ -28,8 +28,10 @@ class RealtimeWeatherBloc
       if (lastPosition != null) {
         positionToFetchTheWeather = lastPosition;
       } else {
-        positionToFetchTheWeather = "32.084304, 34.772472"; //  Tel-aviv
+        //TODO: change to jerusalem?
+        positionToFetchTheWeather = "31.766982, 35.213685"; //  Jerusalem
       }
+      //lat: 31.766982, lng: 35.213685)
     } else {
       //event was triggrerd with the users position
       positionToFetchTheWeather = event.position;
