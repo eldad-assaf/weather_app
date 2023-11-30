@@ -28,7 +28,6 @@ class RealtimeWeatherBloc
       if (lastPosition != null) {
         positionToFetchTheWeather = lastPosition;
       } else {
-        //TODO: change to jerusalem?
         positionToFetchTheWeather = "31.766982, 35.213685"; //  Jerusalem
       }
       //lat: 31.766982, lng: 35.213685)

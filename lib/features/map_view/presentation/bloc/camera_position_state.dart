@@ -3,7 +3,7 @@ part of 'camera_position_bloc.dart';
 abstract class CameraPositionState extends Equatable {
   final CameraPosition? cameraPosition;
   final Object? error;
-
+   
   const CameraPositionState({this.cameraPosition, this.error});
 
   @override

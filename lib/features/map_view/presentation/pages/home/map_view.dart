@@ -17,6 +17,7 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   GoogleMapController? _mapController;
+  LatLng? middleOfTheMap;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,16 +54,20 @@ class MapViewState extends State<MapView> {
                           'CameraPositionError ${state.error.toString()}'));
                 } else if (state is CameraPositionDone) {
                   return GoogleMap(
-                      mapType: MapType.hybrid,
-                      initialCameraPosition: state.cameraPosition!,
-                      onMapCreated: (GoogleMapController controller) async {
-                        // Store the controller for later use
-                        _mapController = controller;
-                        _goToThePlace(cameraPosition: state.cameraPosition!);
-                        // _mapController!.animateCamera(
-                        //     CameraUpdate.newCameraPosition(
-                        //         state.cameraPosition!));
-                      });
+                    mapType: MapType.hybrid,
+                    initialCameraPosition: state.cameraPosition!,
+                    onMapCreated: (GoogleMapController controller) async {
+                      _mapController = controller;
+                      _goToThePlace(cameraPosition: state.cameraPosition!);
+                    },
+                    myLocationButtonEnabled: true,
+                    myLocationEnabled: true,
+                    onCameraIdle: () async {
+                      middleOfTheMap = await _mapController!
+                          .getLatLng(const ScreenCoordinate(x: 0, y: 0));
+                      print('position of the middle : $middleOfTheMap');
+                    },
+                  );
                 } else {
                   return Container(
                     color: Colors.red,
@@ -105,7 +110,18 @@ class MapViewState extends State<MapView> {
           ),
         ]),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  //weahter data in this container 
+                  //start with basic data just to get it to work
+                  return Container(
+                    height: 550.sp,
+                    color: Colors.red,
+                  );
+                });
+          },
           label: const Text('Get weather'),
           icon: const Icon(Icons.directions_boat),
         ),
