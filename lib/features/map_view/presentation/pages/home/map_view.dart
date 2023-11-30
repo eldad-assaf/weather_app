@@ -6,6 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
+import 'package:weather_app/features/realtime_weather/presentation/pages/home/realtime_weather.dart';
 import 'package:weather_app/main.dart';
 
 class MapView extends StatefulWidget {
@@ -65,6 +69,7 @@ class MapViewState extends State<MapView> {
                     onCameraIdle: () async {
                       middleOfTheMap = await _mapController!
                           .getLatLng(const ScreenCoordinate(x: 0, y: 0));
+
                       print('position of the middle : $middleOfTheMap');
                     },
                   );
@@ -110,15 +115,32 @@ class MapViewState extends State<MapView> {
           ),
         ]),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            showModalBottomSheet(
+          onPressed: () async {
+            await showModalBottomSheet(
                 context: context,
                 builder: (context) {
-                  //weahter data in this container 
-                  //start with basic data just to get it to work
-                  return Container(
-                    height: 550.sp,
-                    color: Colors.red,
+                  context.read<RealtimeWeatherBloc>().add(
+                      FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
+
+                  return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+                    builder: (context, state) {
+                      if (state is RealtimeWeatherLoading) {
+                        return Container();
+                      } else if (state is RealtimeWeatherDone) {
+                        return Container(
+                          height: 550.sp,
+                          color: Colors.green,
+                          child: Center(
+                            child: Text(state.realtimeWeather!.localTime!),
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          height: 550.sp,
+                          color: Colors.red,
+                        );
+                      }
+                    },
                   );
                 });
           },

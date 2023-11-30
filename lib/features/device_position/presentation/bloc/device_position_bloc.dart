@@ -3,6 +3,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
 import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
 part 'device_position_event.dart';
@@ -11,6 +12,15 @@ part 'device_position_state.dart';
 extension PostitionAsString on Position {
   String asString() {
     return '${latitude.toStringAsFixed(7)}, ${longitude.toStringAsFixed(7)}';
+  }
+}
+
+extension LatLngAsString on LatLng {
+  String asString() {
+    String latitudeString = latitude.toStringAsFixed(14);
+    String longitudeString = longitude.toStringAsFixed(14);
+
+    return '$latitudeString, $longitudeString';
   }
 }
 
