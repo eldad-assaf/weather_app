@@ -8,6 +8,10 @@ class RealtimeWeatherEntity extends Equatable {
   final String? conditionText;
   final String? conditionIcon;
   final int? conditionCode;
+  final String? localTime;
+  final String? lastUpdated;
+  final double? windMph;
+  final double? windKph;
 
   const RealtimeWeatherEntity({
     this.loactionName,
@@ -17,6 +21,10 @@ class RealtimeWeatherEntity extends Equatable {
     this.conditionText,
     this.conditionIcon,
     this.conditionCode,
+    this.localTime,
+    this.lastUpdated,
+    this.windMph,
+    this.windKph,
   });
 
   @override
@@ -28,7 +36,11 @@ class RealtimeWeatherEntity extends Equatable {
       isDay,
       conditionText,
       conditionIcon,
-      conditionCode
+      conditionCode,
+      localTime,
+      lastUpdated,
+      windMph,
+      windKph,
     ];
   }
 }

@@ -18,10 +18,6 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
   Future<DataState<RealtimeWeatherEntity>> getRealtimeWeather(
       String position) async {
     try {
-      // 37.4219983 ,-122.084
-      // final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
-      //     weatherAPIKey, cityName ?? 'tel-aviv');
-      print('RealtimeWeatherRepositoryImpl position - $position');
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
           weatherAPIKey, position);
       if (httpResponse.response.statusCode == HttpStatus.ok) {

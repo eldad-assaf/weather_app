@@ -10,6 +10,10 @@ class RealtimeWeatherModel extends RealtimeWeatherEntity {
     super.conditionText,
     super.conditionIcon,
     super.conditionCode,
+    super.localTime,
+    super.lastUpdated,
+    super.windMph,
+    super.windKph,
   });
 
   factory RealtimeWeatherModel.fromJson(Map<String, dynamic> map) {
@@ -21,6 +25,10 @@ class RealtimeWeatherModel extends RealtimeWeatherEntity {
       conditionText: map['current']['condition']['text'] ?? "",
       conditionIcon: map['current']['condition']['icon'] ?? "",
       conditionCode: map['current']['condition']['code'] ?? 0,
+      localTime: map['location']['localtime'] ?? "",
+      lastUpdated: map['current']['last_updated'] ?? "",
+      windMph: (map['current']['wind_mph'] ?? 0.0).toDouble(),
+      windKph: (map['current']['wind_kph'] ?? 0.0).toDouble(),
     );
   }
 
@@ -33,6 +41,10 @@ class RealtimeWeatherModel extends RealtimeWeatherEntity {
       conditionText: entity.conditionText,
       conditionIcon: entity.conditionIcon,
       conditionCode: entity.conditionCode,
+      localTime: entity.localTime,
+      lastUpdated: entity.lastUpdated,
+      windMph: entity.windMph,
+      windKph: entity.windKph,
     );
   }
 }
