@@ -30,12 +30,15 @@ class MapViewState extends State<MapView> {
         body: Stack(children: [
           BlocConsumer<DevicePositionBloc, DevicePositionState>(
               listener: (context, state) {
+            print('DevicePositionBloc listener state : $state');
             if (state is DevicePositionDone) {
               context
                   .read<CameraPositionBloc>()
                   .add(DetermineCameraPositionEvent(state.position));
             }
           }, builder: (context, state) {
+            print('DevicePositionBloc builder state : $state');
+
             if (state is DevicePositionLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -98,22 +101,23 @@ class MapViewState extends State<MapView> {
               ),
             ),
           ),
-          Positioned(
-            top: 16,
-            right: 16,
-            child: GestureDetector(
-              onTap: () {
-                context
-                    .read<DevicePositionBloc>()
-                    .add(const DeterminePositionEvent());
-              },
-              child: FaIcon(
-                FontAwesomeIcons.locationArrow,
-                size: 30.sp,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          //No need for this because myLocationButtonEnabled: true,
+          // Positioned(
+          //   top: 16,
+          //   right: 16,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       context
+          //           .read<DevicePositionBloc>()
+          //           .add(const DeterminePositionEvent());
+          //     },
+          //     child: FaIcon(
+          //       FontAwesomeIcons.locationArrow,
+          //       size: 30.sp,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
         ]),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
@@ -121,7 +125,6 @@ class MapViewState extends State<MapView> {
                 .read<RealtimeWeatherBloc>()
                 .add(FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
             await showModalBottomSheet(
-              
                 useSafeArea: true,
                 //barrierColor: Colors.blue,
                 isScrollControlled: true,

@@ -43,7 +43,6 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DeterminePositionUseCase>(
       DeterminePositionUseCase(sl()));
 
-  sl.registerSingleton<SaveLastPositionUseCase>(SaveLastPositionUseCase(sl()));
 
   sl.registerSingleton<DetermineInitialCameraPositionUseCase>(
       DetermineInitialCameraPositionUseCase(sl()));
@@ -56,7 +55,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RealtimeWeatherBloc>(() => RealtimeWeatherBloc(sl()));
   sl.registerFactory<DevicePositionBloc>(() => DevicePositionBloc(
         sl(),
-        sl(),
+      
       ));
   sl.registerFactory<CameraPositionBloc>(() => CameraPositionBloc(sl(), sl()));
 }
