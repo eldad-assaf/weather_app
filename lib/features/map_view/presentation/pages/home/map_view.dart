@@ -116,12 +116,12 @@ class MapViewState extends State<MapView> {
         ]),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
+            context
+                .read<RealtimeWeatherBloc>()
+                .add(FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
             await showModalBottomSheet(
                 context: context,
                 builder: (context) {
-                  context.read<RealtimeWeatherBloc>().add(
-                      FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
-
                   return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
                     builder: (context, state) {
                       if (state is RealtimeWeatherLoading) {

@@ -33,5 +33,5 @@ CameraPosition _buildCameraPoistion({
   required double lat,
   required double lng,
 }) {
-  return CameraPosition(target: LatLng(lat, lng), zoom: 13);
+  return CameraPosition(target: LatLng(lat, lng), zoom: 7);
 }
