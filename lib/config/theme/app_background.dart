@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BackGround extends StatefulWidget {
-  final String isDay; // keep it a string
+  final int isDay;
   const BackGround({super.key, required this.isDay});
 
   @override
@@ -18,8 +17,7 @@ class _BackGroundState extends State<BackGround> {
   @override
   void initState() {
     Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      print(start);
-      if (start > 7.5) {
+      if (start> 7.5) {
         start = -7.5;
         end = -7.5;
       }
@@ -34,6 +32,7 @@ class _BackGroundState extends State<BackGround> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           Align(
@@ -43,28 +42,11 @@ class _BackGroundState extends State<BackGround> {
               width: 300.sp,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: widget.isDay == '1' ? Colors.orange : Colors.blueGrey),
-            ),
-          ),
-          Align(
-            alignment: AlignmentDirectional(start, end),
-            child: Container(
-              height: 300.sp,
-              width: 300.sp,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.blue),
-            ),
-          ),
-          Align(
-            alignment: const AlignmentDirectional(0, -1.2),
-            child: Container(
-              height: 300.sp,
-              width: 350.sp,
-              decoration: const BoxDecoration(color: Colors.blue),
+                  color: widget.isDay == 1 ? Colors.orange : Colors.blueGrey),
             ),
           ),
           BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+            filter: ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
             child: Container(
               decoration: const BoxDecoration(color: Colors.transparent),
             ),
@@ -75,43 +57,3 @@ class _BackGroundState extends State<BackGround> {
   }
 }
 
-Widget buildAppBackground() {
-  return SingleChildScrollView(
-    child: Column(
-      children: [
-        Align(
-          alignment: const AlignmentDirectional(3, -0.3),
-          child: Container(
-            height: 300.sp,
-            width: 300.sp,
-            decoration:
-                const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-          ),
-        ),
-        Align(
-          alignment: const AlignmentDirectional(-3, -0.3),
-          child: Container(
-            height: 300.sp,
-            width: 300.sp,
-            decoration:
-                const BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-          ),
-        ),
-        Align(
-          alignment: const AlignmentDirectional(0, -1.2),
-          child: Container(
-            height: 300.sp,
-            width: 350.sp,
-            decoration: const BoxDecoration(color: Colors.orange),
-          ),
-        ),
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-          child: Container(
-            decoration: const BoxDecoration(color: Colors.transparent),
-          ),
-        )
-      ],
-    ),
-  );
-}

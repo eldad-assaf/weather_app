@@ -35,60 +35,66 @@ class RealtimeWeather extends StatelessWidget {
                 child: Stack(
                   children: [
                     //  buildAppBackground(),
-                    const BackGround(
-                      isDay: '1',
+                    BackGround(
+                      isDay: state.realtimeWeather!.isDay!,
                     ),
                     Align(
                       alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          ReusableText(
-                            style: appStyle(
-                              25,
-                              Colors.black,
-                              FontWeight.bold,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 30.sp),
+                        child: Column(
+                          children: [
+                            ReusableText(
+                              style: appStyle(
+                                45,
+                                Colors.white,
+                                FontWeight.bold,
+                              ),
+                              text: state.realtimeWeather?.loactionName ?? '',
                             ),
-                            text: state.realtimeWeather?.loactionName ?? '',
-                          ),
-                          ReusableText(
-                            style: appStyle(
-                              25,
-                              Colors.black,
-                              FontWeight.w300,
+                            ReusableText(
+                              style: appStyle(
+                                25,
+                                Colors.white,
+                                FontWeight.w300,
+                              ),
+                              text: "Now",
                             ),
-                            text: "Now",
-                          ),
-                          SizedBox(
-                            height: 50.sp,
-                          ),
-                          ReusableText(
-                            style: appStyle(
-                              70,
-                              Colors.white,
-                              FontWeight.bold,
+                            SizedBox(
+                              height: 50.sp,
                             ),
-                            text: "${state.realtimeWeather?.tempC}C",
-                          ),
-                          SizedBox(
-                              width: ScreenUtil().setWidth(222),
-                              child: const Divider()),
-                          SizedBox(
-                            height: 50.sp,
-                          ),
-                          ReusableText(
-                            style: appStyle(
-                              25,
-                              Colors.black,
-                              FontWeight.normal,
+                            ReusableText(
+                              style: appStyle(
+                                70,
+                                Colors.white,
+                                FontWeight.bold,
+                              ),
+                              text: "${state.realtimeWeather?.tempC}C",
                             ),
-                            text: state.realtimeWeather?.conditionText ?? '',
-                          ),
-                          SizedBox(
-                              width: 180.sp,
-                              height: 180.sp,
-                              child: getWeatherIcon(
-                                  state.realtimeWeather!.conditionCode!)),
-                        ],
+                            SizedBox(
+                                width: ScreenUtil().setWidth(222),
+                                child: const Divider()),
+                            SizedBox(
+                              height: 50.sp,
+                            ),
+                            ReusableText(
+                              style: appStyle(
+                                30,
+                                Colors.white,
+                                FontWeight.normal,
+                              ),
+                              text: state.realtimeWeather?.conditionText ?? '',
+                            ),
+                            SizedBox(
+                              height: 20.sp,
+                            ),
+                            SizedBox(
+                                width: 100.sp,
+                                height: 100.sp,
+                                child: getWeatherIcon(
+                                    state.realtimeWeather!.conditionCode!)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
