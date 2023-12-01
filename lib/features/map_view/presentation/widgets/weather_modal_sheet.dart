@@ -23,6 +23,7 @@ class WeatherModalSheet extends StatelessWidget {
 
     return Container(
       color: Colors.green,
+      height: 500.sp,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

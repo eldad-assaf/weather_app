@@ -47,6 +47,7 @@ class DevicePositionBloc
       }
       final position = await _determinePositionUseCase();
       // await _saveLastPositionUseCase(params: position.asString());
+      print('position1: $position');
 
       emit(DevicePositionDone(position));
     } catch (e) {

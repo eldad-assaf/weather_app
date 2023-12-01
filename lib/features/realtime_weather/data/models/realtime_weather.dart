@@ -2,24 +2,25 @@
 import '../../domain/entities/realtime_weather.dart';
 
 class RealtimeWeatherModel extends RealtimeWeatherEntity {
-  const RealtimeWeatherModel(
-      {super.loactionName,
-      super.tempC,
-      super.tempF,
-      super.isDay,
-      super.conditionText,
-      super.conditionIcon,
-      super.conditionCode,
-      super.localTime,
-      super.lastUpdated,
-      super.windMph,
-      super.windKph,
-      super.cloud,
-      super.uv});
+  const RealtimeWeatherModel({
+    super.loactionName,
+    super.tempC,
+    super.tempF,
+    super.isDay,
+    super.conditionText,
+    super.conditionIcon,
+    super.conditionCode,
+    super.localTime,
+    super.lastUpdated,
+    super.windMph,
+    super.windKph,
+    super.cloud,
+    super.uv,
+  });
 
   factory RealtimeWeatherModel.fromJson(Map<String, dynamic> map) {
     return RealtimeWeatherModel(
-      loactionName: map['location']['name'] ?? "",
+      loactionName: map['location']['name'] ?? "delete",
       tempC: (map['current']['temp_c'] ?? 0.0).toDouble(),
       tempF: (map['current']['temp_f'] ?? 0.0).toDouble(),
       isDay: map['current']['is_day'] ?? 0,

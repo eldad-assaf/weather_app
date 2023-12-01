@@ -121,6 +121,7 @@ class MapViewState extends State<MapView> {
                 .read<RealtimeWeatherBloc>()
                 .add(FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
             await showModalBottomSheet(
+              
                 useSafeArea: true,
                 //barrierColor: Colors.blue,
                 isScrollControlled: true,

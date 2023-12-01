@@ -21,6 +21,8 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
           weatherAPIKey, position);
       if (httpResponse.response.statusCode == HttpStatus.ok) {
+        print('ok');
+        print(httpResponse.data.loactionName);
         return DataSucess(httpResponse.data);
       } else {
         return DataFailed(DioException(
