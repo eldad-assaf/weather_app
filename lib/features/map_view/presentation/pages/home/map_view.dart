@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
+import 'package:weather_app/features/map_view/presentation/widgets/weather_modal_sheet.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
@@ -120,6 +121,10 @@ class MapViewState extends State<MapView> {
                 .read<RealtimeWeatherBloc>()
                 .add(FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
             await showModalBottomSheet(
+                useSafeArea: true,
+                //barrierColor: Colors.blue,
+                isScrollControlled: true,
+                showDragHandle: true,
                 context: context,
                 builder: (context) {
                   return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
@@ -127,12 +132,8 @@ class MapViewState extends State<MapView> {
                       if (state is RealtimeWeatherLoading) {
                         return Container();
                       } else if (state is RealtimeWeatherDone) {
-                        return Container(
-                          height: 550.sp,
-                          color: Colors.green,
-                          child: Center(
-                            child: Text(state.realtimeWeather!.localTime!),
-                          ),
+                        return WeatherModalSheet(
+                          realtimeWeather: state.realtimeWeather!,
                         );
                       } else {
                         return Container(
