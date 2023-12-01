@@ -108,7 +108,7 @@ class Home extends StatelessWidget {
                 listener: (context, state) {
                   if (state is DevicePositionDone) {
                     BlocProvider.of<RealtimeWeatherBloc>(context).add(
-                        FetchRealtimeWeatherEvent(state.position.toString()));
+                        FetchRealtimeWeatherEvent(state.position!.asString()));
                   }
                   if (state is DeviceLocationServicesNotEnabled) {
                     const AlertDialogModel(

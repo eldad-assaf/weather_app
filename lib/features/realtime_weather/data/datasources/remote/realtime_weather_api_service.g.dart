@@ -10,8 +10,10 @@ part of 'realtime_weather_api_service.dart';
 
 class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
   _RealtimeWeatherApiService(
-    this._dio) {
-    baseUrl ??= 'http://api.weatherapi.com/v1';
+    this._dio, {
+    this.baseUrl,
+  }) {
+    baseUrl ??= 'https://api.weatherapi.com/v1';
   }
 
   final Dio _dio;
@@ -21,16 +23,16 @@ class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
   @override
   Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather(
     String? apiKey,
-    String? cityName,
+    String? latLng,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'key': apiKey,
-      r'q': cityName,
+      r'q': latLng,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<RealtimeWeatherModel>>(Options(
       method: 'GET',

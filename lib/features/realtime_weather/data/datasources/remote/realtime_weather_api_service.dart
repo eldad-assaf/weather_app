@@ -12,6 +12,6 @@ abstract class RealtimeWeatherApiService {
   @GET('/current.json')
   Future<HttpResponse<RealtimeWeatherModel>> getRealtimeWeather(
     @Query("key") String? apiKey,
-    @Query("q") String? cityName,
+    @Query("q") String? latLng,
   );
 }

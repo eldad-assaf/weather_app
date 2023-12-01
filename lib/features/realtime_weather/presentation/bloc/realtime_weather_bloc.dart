@@ -36,6 +36,7 @@ class RealtimeWeatherBloc
       positionToFetchTheWeather = event.position;
     }
 
+    
     final dataState =
         await _realtimeWeatherUseCase(params: positionToFetchTheWeather);
     if (dataState is DataSucess && dataState.data != null) {
