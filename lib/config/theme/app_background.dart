@@ -12,12 +12,13 @@ class BackGround extends StatefulWidget {
 }
 
 class _BackGroundState extends State<BackGround> {
+  late Timer timer;
   double start = 0;
   double end = 0;
   @override
   void initState() {
-    Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      if (start> 7.5) {
+    timer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      if (start > 7.5) {
         start = -7.5;
         end = -7.5;
       }
@@ -27,6 +28,12 @@ class _BackGroundState extends State<BackGround> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -56,4 +63,3 @@ class _BackGroundState extends State<BackGround> {
     );
   }
 }
-

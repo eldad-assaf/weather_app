@@ -84,6 +84,19 @@ class Home extends StatelessWidget {
     final PageController controller = PageController();
     return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
       builder: (context, state) {
+        if (state is RealtimeWeatherInitial ||
+            state is RealtimeWeatherLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (state is RealtimeWeatherError) {
+          return const Scaffold(
+            body: Center(
+                child: Text(
+                    'Opps, something went wrong with the weather service,\n please try again later')),
+          );
+        }
         if (state is RealtimeWeatherDone) {
           return Scaffold(
             extendBodyBehindAppBar: true,
@@ -209,10 +222,8 @@ class Home extends StatelessWidget {
             ),
           );
         } else {
-          return Container(
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         }
       },
