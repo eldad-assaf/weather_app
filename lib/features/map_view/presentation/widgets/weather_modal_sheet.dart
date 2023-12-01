@@ -29,14 +29,14 @@ class WeatherModalSheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: Text('data'),
+            Center(
+              child: ReusableText(
+                  text: locationName!,
+                  style: appStyle(25, Colors.white, FontWeight.w300)),
             ),
-            ReusableText(
-                text: locationName!,
-                style: appStyle(25, Colors.white, FontWeight.w300)),
-            // Text(localTime!),
-            // Text(lastUpdated!),
+            SizedBox(
+              height: 10.sp,
+            ),
             ReusableText(
                 text: 'Local time : ${localTime!}',
                 style: appStyle(18, Colors.white, FontWeight.w300)),

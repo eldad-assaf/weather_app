@@ -2,10 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:weather_app/components/alert_dialog_model.dart';
+import 'package:weather_app/components/error_handler.dart';
 import 'package:weather_app/components/text_style.dart';
+import 'package:weather_app/config/theme/app_background.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
-import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 
 import '../../../../../components/reuseable_text.dart';
 import '../../bloc/realtime_weather_state.dart';
@@ -14,60 +14,12 @@ import '../../bloc/realtime_weather_state.dart';
 class RealtimeWeather extends StatelessWidget {
   const RealtimeWeather({super.key});
 
-  Widget getWeatherIcon(int code) {
-    switch (code) {
-      case == 1000: //suuny
-        return Image.asset('assets/6.png');
-      case == 1003: // partly cloudy
-        return Image.asset('assets/7.png');
-      case >= 1006: // cloudy
-        return Image.asset('assets/8.png');
-      case >= 1009: // overcast
-        return Image.asset('assets/8.png');
-      case >= 1030: //mist
-        return Image.asset('assets/5.png');
-      case == 1063: // Patchy rain possible
-        return Image.asset('assets/2.png');
-      case == 1066: //Patchy snow possible
-        return Image.asset('assets/4.png');
-      case == 1069: //Patchy snow possible
-        return Image.asset('assets/4.png');
-      case == 1072: //Patchy freezing drizzle possible
-        return Image.asset('assets/4.png');
-      case == 1087: //Thundery outbreaks possible
-        return Image.asset('assets/1.png');
-      case == 1087: //Thundery outbreaks possible
-        return Image.asset('assets/1.png');
-
-      default:
-        return Image.asset(
-          'assets/14.png',
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<RealtimeWeatherBloc, RealtimeWeatherState>(
       listener: (context, state) {
         if (state is RealtimeWeatherError) {
-          String errMsg = 'Something went wrong, try again later';
-          if (state.error != null && state.error!.response != null) {
-            errMsg = state.error!.response!.data['error']['message'];
-          }
-
-          AlertDialogModel(
-              title: 'Opps!',
-              //message: "${state.error!.message}",//The request returned an invalid status code of 400.
-              //message: "${state.error!.error}", //null
-              //message: "${state.error!.response!.statusMessage}", //bad request
-              //message: "${state.error!.response!.statusCode}", //400
-              //message: "${state.error!.response!.data}", //{error: {code: 1006, message: No matching location found.}}
-              message: errMsg,
-              buttons: const {'OK': true}).present(context).then((value) {
-            BlocProvider.of<RealtimeWeatherBloc>(context)
-                .add(const FetchRealtimeWeatherEvent(null));
-          });
+          errorHandler(context, state);
         }
       },
       child: BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
@@ -82,38 +34,9 @@ class RealtimeWeather extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
                   children: [
-                    Align(
-                      alignment: const AlignmentDirectional(3, -0.3),
-                      child: Container(
-                        height: 300.sp,
-                        width: 300.sp,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.purple),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(-3, -0.3),
-                      child: Container(
-                        height: 300.sp,
-                        width: 300.sp,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.purple),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(0, -1.2),
-                      child: Container(
-                        height: 300.sp,
-                        width: 350.sp,
-                        decoration: const BoxDecoration(color: Colors.orange),
-                      ),
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-                      child: Container(
-                        decoration:
-                            const BoxDecoration(color: Colors.transparent),
-                      ),
+                    //  buildAppBackground(),
+                    const BackGround(
+                      isDay: '1',
                     ),
                     Align(
                       alignment: Alignment.center,
@@ -178,5 +101,37 @@ class RealtimeWeather extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget getWeatherIcon(int code) {
+    switch (code) {
+      case == 1000: //suuny
+        return Image.asset('assets/6.png');
+      case == 1003: // partly cloudy
+        return Image.asset('assets/7.png');
+      case >= 1006: // cloudy
+        return Image.asset('assets/8.png');
+      case >= 1009: // overcast
+        return Image.asset('assets/8.png');
+      case >= 1030: //mist
+        return Image.asset('assets/5.png');
+      case == 1063: // Patchy rain possible
+        return Image.asset('assets/2.png');
+      case == 1066: //Patchy snow possible
+        return Image.asset('assets/4.png');
+      case == 1069: //Patchy snow possible
+        return Image.asset('assets/4.png');
+      case == 1072: //Patchy freezing drizzle possible
+        return Image.asset('assets/4.png');
+      case == 1087: //Thundery outbreaks possible
+        return Image.asset('assets/1.png');
+      case == 1087: //Thundery outbreaks possible
+        return Image.asset('assets/1.png');
+
+      default:
+        return Image.asset(
+          'assets/14.png',
+        );
+    }
   }
 }
