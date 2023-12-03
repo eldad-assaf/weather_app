@@ -8,10 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/components/reuseable_text.dart';
 import 'package:weather_app/components/text_style.dart';
+import 'package:weather_app/features/chat_gpt_weather/data/repositories/open_ai_repository_impl.dart';
 import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
+import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 import 'package:weather_app/injection_container.dart';
@@ -240,17 +242,58 @@ class GptWeather extends StatefulWidget {
 class _GptWeatherState extends State<GptWeather> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: GestureDetector(
-            onTap: () async {
-              await sl<OpenAIRepository>().chatComplete();
-            },
-            child: const Icon(
-              Icons.text_decrease,
-              color: Colors.white,
-            )),
-      ),
+    return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+      builder: (context, state) {
+        if (state is RealtimeWeatherInitial ||
+            state is RealtimeWeatherLoading) {
+          return Container(
+            color: Colors.red,
+          );
+        }
+        if (state is RealtimeWeatherError) {
+          return const Center(
+            child: Text('Opps, error!'),
+          );
+        } else {
+          return FutureBuilder(
+              future: sl<OpenAIRepository>().getWeatherExplanationFromChatGpt(
+                  realtimeWeatherEntity: state.realtimeWeather!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center();
+                } else if (snapshot.connectionState == ConnectionState.done) {
+                  return Center(
+                    child: GestureDetector(
+                        onTap: () async {
+                          print('object');
+                          await sl<OpenAIRepositoryImpl>()
+                              .getWeatherExplanationFromChatGpt(
+                                  realtimeWeatherEntity:
+                                      const RealtimeWeatherEntity());
+                        },
+                        child: const Icon(
+                          Icons.text_decrease,
+                          color: Colors.white,
+                        )),
+                  );
+                } else {
+                  return const Center(child: Text('Opps, error!'));
+                }
+                // return Center(
+                //   child: GestureDetector(
+                //       onTap: () async {
+                //         await sl<OpenAIRepositoryImpl>()
+                //             .getWeatherExplanationFromChatGpt(
+                //                 realtimeWeatherEntity:
+                //                     const RealtimeWeatherEntity());
+                //       },
+                //       child: const Icon(
+                //         Icons.text_decrease,
+                //         color: Colors.white,
+                //       )),
+              });
+        }
+      },
     );
   }
 }

@@ -1,5 +1,7 @@
-abstract class OpenAIRepository {
-  Future<void> chatComplete();
+import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
 
-  // Add methods for interacting with the OpenAI API, e.g., sending requests.
+abstract class OpenAIRepository {
+
+  Future<void> getWeatherExplanationFromChatGpt({required RealtimeWeatherEntity realtimeWeatherEntity});
+
 }
