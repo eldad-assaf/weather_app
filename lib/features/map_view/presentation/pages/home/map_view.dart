@@ -53,24 +53,6 @@ class MapViewState extends State<MapView> {
             },
           ),
           backButton(),
-     
-          //No need for this because myLocationButtonEnabled: true,
-          // Positioned(
-          //   top: 16,
-          //   right: 16,
-          //   child: GestureDetector(
-          //     onTap: () {
-          //       context
-          //           .read<DevicePositionBloc>()
-          //           .add(const DeterminePositionEvent());
-          //     },
-          //     child: FaIcon(
-          //       FontAwesomeIcons.locationArrow,
-          //       size: 30.sp,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // ),
         ]),
         floatingActionButton: buildFab(context),
       ),
@@ -87,10 +69,18 @@ class MapViewState extends State<MapView> {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home()));
         },
-        child: FaIcon(
-          FontAwesomeIcons.arrowLeft,
-          size: 30.sp,
-          color: Colors.white,
+        child: Container(
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          width: 35.sp,
+          height: 35.sp,
+          child: Center(
+            child: FaIcon(
+              FontAwesomeIcons.arrowLeft,
+              size: 25.sp,
+              color: Colors.black,
+            ),
+          ),
         ),
       ),
     );
@@ -129,7 +119,7 @@ class MapViewState extends State<MapView> {
             });
       },
       label: const Text('Get weather'),
-      icon: const Icon(Icons.directions_boat),
+      icon: const FaIcon(FontAwesomeIcons.locationArrow),
     );
   }
 
