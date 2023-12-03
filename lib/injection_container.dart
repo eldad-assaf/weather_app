@@ -1,11 +1,12 @@
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:weather_app/features/chat_gpt_weather/data/repositories/open_ai_repository_impl.dart';
+import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/device_position/data/repositories/device_location_repository_impl.dart';
 import 'package:weather_app/features/device_position/domain/repositories/device_location_repository.dart';
 import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
-import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
-
 import 'package:weather_app/features/map_view/data/repositories/camera_position_repository_impl.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
@@ -35,6 +36,15 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CameraPositionRepository>(
       CameraPositionRepositoryImpl());
 
+    sl.registerSingleton<OpenAI>(OpenAI.instance.build(
+    token: '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',
+    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+    enableLog: true,
+  ));
+
+  sl.registerSingleton<OpenAIRepository>(OpenAIRepositoryImpl(sl()));
+
+
   //UseCases
 
   sl.registerSingleton<FetchRealtimeWeatherUseCase>(
@@ -42,7 +52,6 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<DeterminePositionUseCase>(
       DeterminePositionUseCase(sl()));
-
 
   sl.registerSingleton<DetermineInitialCameraPositionUseCase>(
       DetermineInitialCameraPositionUseCase(sl()));
@@ -55,7 +64,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RealtimeWeatherBloc>(() => RealtimeWeatherBloc(sl()));
   sl.registerFactory<DevicePositionBloc>(() => DevicePositionBloc(
         sl(),
-      
       ));
   sl.registerFactory<CameraPositionBloc>(() => CameraPositionBloc(sl(), sl()));
 }

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
 import 'package:weather_app/components/reuseable_text.dart';
 import 'package:weather_app/components/text_style.dart';
+import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
@@ -215,9 +216,7 @@ class Home extends StatelessWidget {
               children: const <Widget>[
                 RealtimeWeather(),
                 //  MapView(),
-                Center(
-                  child: Text('Second Page'),
-                ),
+                GptWeather(),
               ],
             ),
           );
@@ -227,6 +226,31 @@ class Home extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class GptWeather extends StatefulWidget {
+  const GptWeather({super.key});
+
+  @override
+  State<GptWeather> createState() => _GptWeatherState();
+}
+
+class _GptWeatherState extends State<GptWeather> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: GestureDetector(
+            onTap: () async {
+              await sl<OpenAIRepository>().chatComplete();
+            },
+            child: const Icon(
+              Icons.text_decrease,
+              color: Colors.white,
+            )),
+      ),
     );
   }
 }
