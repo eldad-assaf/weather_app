@@ -12,6 +12,7 @@ import 'package:weather_app/features/device_position/presentation/bloc/device_po
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 import 'package:weather_app/injection_container.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
@@ -81,125 +82,151 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    return SafeArea(
-      child: Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            centerTitle: true,
-            // forceMaterialTransparency: true,
-            elevation: 0,
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarBrightness: Brightness.dark),
-            title: ReusableText(
-                text: 'Weather',
-                style: appStyle(25, Colors.white, FontWeight.w300)),
-            actions: [
-              IconButton(
-                  color: Colors.red,
-                  onPressed: () async {
-                    SharedPreferences sf =
-                        await SharedPreferences.getInstance();
-                    await sf.clear();
-                  },
-                  icon: const Icon(Icons.delete)),
-              BlocListener<DevicePositionBloc, DevicePositionState>(
-                listener: (context, state) {
-                  if (state is DevicePositionDone) {
-                    BlocProvider.of<RealtimeWeatherBloc>(context).add(
-                        FetchRealtimeWeatherEvent(state.position.toString()));
-                  }
-                  if (state is DeviceLocationServicesNotEnabled) {
-                    const AlertDialogModel(
-                            message:
-                                'Please go to settings and enable the device location service',
-                            buttons: {'ok': true},
-                            title: 'Location service')
-                        .present(context)
-                        .then((goToSettings) async {
-                      if (goToSettings == true) {
-                        await Geolocator.openLocationSettings();
-                      }
-                    });
-                  }
-                  if (state is DeviceLocationPermissionsDenied) {
-                    const AlertDialogModel(
-                            message:
-                                'You need to give the app location permissions',
-                            buttons: {'ok': true},
-                            title: 'Permissions needed')
-                        .present(context)
-                        .then((requestAgain) async {
-                      if (requestAgain == true) {
-                        await Geolocator.openLocationSettings();
-                      }
-                    });
-                  }
-                  if (state is DeviceLocationPermissionsDeniedForever) {
-                    const AlertDialogModel(
-                            message:
-                                'You need to give the app location permissions',
-                            buttons: {'ok': true},
-                            title: 'Permissions needed')
-                        .present(context)
-                        .then((requestAgain) async {
-                      if (requestAgain == true) {
-                        await Geolocator.openAppSettings();
-                      }
-                    });
-                  }
-                },
-                child: BlocBuilder<DevicePositionBloc, DevicePositionState>(
-                  builder: (context, state) {
-                    if (state is DevicePositionLoading) {
-                      return const Padding(
-                        padding: EdgeInsets.only(right: 15),
-                        child: CircularProgressIndicator(),
-                      );
+    return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+      builder: (context, state) {
+        if (state is RealtimeWeatherInitial ||
+            state is RealtimeWeatherLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (state is RealtimeWeatherError) {
+          return const Scaffold(
+            body: Center(
+                child: Text(
+                    'Opps, something went wrong with the weather service,\n please try again later')),
+          );
+        }
+        if (state is RealtimeWeatherDone) {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            backgroundColor:
+                state.realtimeWeather!.isDay == 1 ? Colors.blue : Colors.black,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              // forceMaterialTransparency: true,
+              elevation: 3,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.dark),
+              title: ReusableText(
+                  text: 'Weather',
+                  style: appStyle(18, Colors.white, FontWeight.w300)),
+              actions: [
+                IconButton(
+                    color: Colors.red,
+                    onPressed: () async {
+                      SharedPreferences sf =
+                          await SharedPreferences.getInstance();
+                      await sf.clear();
+                    },
+                    icon: const Icon(Icons.delete)),
+                BlocListener<DevicePositionBloc, DevicePositionState>(
+                  listener: (context, state) {
+                    if (state is DevicePositionDone) {
+                      BlocProvider.of<RealtimeWeatherBloc>(context).add(
+                          FetchRealtimeWeatherEvent(
+                              state.position!.asString()));
                     }
-                    return InkWell(
-                      onTap: () {
-                        BlocProvider.of<DevicePositionBloc>(context)
-                            .add(const DeterminePositionEvent());
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                        child: FaIcon(
-                          FontAwesomeIcons.locationArrow,
-                          size: 33.sp,
-                          color: Colors.white,
+                    if (state is DeviceLocationServicesNotEnabled) {
+                      const AlertDialogModel(
+                              message:
+                                  'Please go to settings and enable the device location service',
+                              buttons: {'ok': true},
+                              title: 'Location service')
+                          .present(context)
+                          .then((goToSettings) async {
+                        if (goToSettings == true) {
+                          await Geolocator.openLocationSettings();
+                        }
+                      });
+                    }
+                    if (state is DeviceLocationPermissionsDenied) {
+                      const AlertDialogModel(
+                              message:
+                                  'You need to give the app location permissions',
+                              buttons: {'ok': true},
+                              title: 'Permissions needed')
+                          .present(context)
+                          .then((requestAgain) async {
+                        if (requestAgain == true) {
+                          await Geolocator.openLocationSettings();
+                        }
+                      });
+                    }
+                    if (state is DeviceLocationPermissionsDeniedForever) {
+                      const AlertDialogModel(
+                              message:
+                                  'You need to give the app location permissions',
+                              buttons: {'ok': true},
+                              title: 'Permissions needed')
+                          .present(context)
+                          .then((requestAgain) async {
+                        if (requestAgain == true) {
+                          await Geolocator.openAppSettings();
+                        }
+                      });
+                    }
+                  },
+                  child: BlocBuilder<DevicePositionBloc, DevicePositionState>(
+                    builder: (context, state) {
+                      if (state is DevicePositionLoading) {
+                        return const Padding(
+                          padding: EdgeInsets.only(right: 15),
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return InkWell(
+                        onTap: () {
+                          BlocProvider.of<DevicePositionBloc>(context)
+                              .add(const DeterminePositionEvent());
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: FaIcon(
+                            FontAwesomeIcons.locationArrow,
+                            size: 33.sp,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return const MapView();
-                    }));
-                  },
-                  icon: FaIcon(
-                    FontAwesomeIcons.map,
-                    size: 33.sp,
-                    color: Colors.white,
-                  ))
-            ],
-          ),
-          body: PageView(
-            padEnds: false,
-            controller: controller,
-            children: const <Widget>[
-              RealtimeWeather(),
-              //  MapView(),
-              Center(
-                child: Text('Second Page'),
-              ),
-            ],
-          )),
+                IconButton(
+                    onPressed: () {
+                      context
+                          .read<CameraPositionBloc>()
+                          .add(const DetermineInitialCameraPositionEvent());
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const MapView();
+                      }));
+                    },
+                    icon: FaIcon(
+                      FontAwesomeIcons.map,
+                      size: 33.sp,
+                      color: Colors.white,
+                    ))
+              ],
+            ),
+            body: PageView(
+              padEnds: false,
+              controller: controller,
+              children: const <Widget>[
+                RealtimeWeather(),
+                //  MapView(),
+                Center(
+                  child: Text('Second Page'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }

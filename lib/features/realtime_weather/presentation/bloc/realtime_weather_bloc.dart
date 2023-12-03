@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_print
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
@@ -23,12 +22,16 @@ class RealtimeWeatherBloc
     if (event.position == null) {
       //on app start the event is triggerd with a null position (String)
       //checks for last position from sf
+      //saving the last position to sf is onDeterminePosition
+
       final sf = await SharedPreferences.getInstance();
-      final lastPosition = sf.getString('position');
+      final lastPosition = sf.getString('latlngAsString');
+      print('lastPosition : $lastPosition');
+
       if (lastPosition != null) {
         positionToFetchTheWeather = lastPosition;
       } else {
-        positionToFetchTheWeather = "32.084304, 34.772472"; //  Tel-aviv
+        positionToFetchTheWeather = "31.766982, 35.213685"; //  Jerusalem
       }
     } else {
       //event was triggrerd with the users position

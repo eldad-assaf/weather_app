@@ -9,12 +9,12 @@ import 'package:weather_app/features/device_position/presentation/bloc/device_po
 import 'package:weather_app/features/map_view/data/repositories/camera_position_repository_impl.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
+import 'package:weather_app/features/map_view/domain/usecases/determine_initial_camera_position.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/realtime_weather/data/datasources/remote/realtime_weather_api_service.dart';
 import 'package:weather_app/features/realtime_weather/data/repositories/realtime_weather_repository_impl.dart';
 import 'package:weather_app/features/realtime_weather/domain/repositories/realtime_weather_repository.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
-
 
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
@@ -43,7 +43,9 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DeterminePositionUseCase>(
       DeterminePositionUseCase(sl()));
 
-  sl.registerSingleton<SaveLastPositionUseCase>(SaveLastPositionUseCase(sl()));
+
+  sl.registerSingleton<DetermineInitialCameraPositionUseCase>(
+      DetermineInitialCameraPositionUseCase(sl()));
 
   sl.registerSingleton<DetermineCameraPositionUseCase>(
       DetermineCameraPositionUseCase(sl()));
@@ -53,7 +55,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RealtimeWeatherBloc>(() => RealtimeWeatherBloc(sl()));
   sl.registerFactory<DevicePositionBloc>(() => DevicePositionBloc(
         sl(),
-        sl(),
+      
       ));
-  sl.registerFactory<CameraPositionBloc>(() => CameraPositionBloc(sl()));
+  sl.registerFactory<CameraPositionBloc>(() => CameraPositionBloc(sl(), sl()));
 }

@@ -1,32 +1,37 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 
 class CameraPositionRepositoryImpl extends CameraPositionRepository {
   @override
-  Future<CameraPosition> determineInitialCameraPosition(String position) async {
-    final latlng = parseLatLng(position);
-    return CameraPosition(
-      target: latlng ?? const LatLng(32.084304, 34.772472), //  Tel-aviv
-      zoom: 14.4746,
-    );
+  Future<CameraPosition> determineInitialCameraPosition() async {
+    final sf = await SharedPreferences.getInstance();
+    final lat = sf.getString('lat');
+    final lng = sf.getString('lng');
+    if (lat != null && lng != null) {
+      return _buildCameraPoistion(
+          lat: double.parse(lat), lng: double.parse(lng));
+    } else {
+      //jerusalem
+      return _buildCameraPoistion(lat: 31.766982, lng: 35.213685);
+    }
+  }
+
+  @override
+  Future<CameraPosition> determineCameraPosition(Position position) async {
+    //save the device position to sf
+    final sf = await SharedPreferences.getInstance();
+    await sf.setString('lat', position.latitude.toString());
+    await sf.setString('lng', position.longitude.toString());
+    return _buildCameraPoistion(
+        lat: position.latitude, lng: position.longitude);
   }
 }
 
-LatLng? parseLatLng(String input) {
-  List<String> coordinates = input.split(',').map((e) => e.trim()).toList();
-
-  if (coordinates.length != 2) {
-    throw ArgumentError(
-        'Invalid input format. Please provide latitude and longitude separated by a comma.');
-  }
-
-  double? latitude = double.tryParse(coordinates[0]);
-  double? longitude = double.tryParse(coordinates[1]);
-
-  if (latitude == null || longitude == null) {
-    throw ArgumentError(
-        'Invalid latitude or longitude format. Please provide valid numeric values.');
-  }
-
-  return LatLng(latitude, longitude);
+CameraPosition _buildCameraPoistion({
+  required double lat,
+  required double lng,
+}) {
+  return CameraPosition(target: LatLng(lat, lng), zoom: 7);
 }

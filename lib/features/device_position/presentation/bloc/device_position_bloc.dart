@@ -3,6 +3,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
 import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
 part 'device_position_event.dart';
@@ -14,14 +16,22 @@ extension PostitionAsString on Position {
   }
 }
 
+extension LatLngAsString on LatLng {
+  String asString() {
+    String latitudeString = latitude.toStringAsFixed(14);
+    String longitudeString = longitude.toStringAsFixed(14);
+
+    return '$latitudeString, $longitudeString';
+  }
+}
+
 class DevicePositionBloc
     extends Bloc<DevicePositionEvent, DevicePositionState> {
   final DeterminePositionUseCase _determinePositionUseCase;
-  final SaveLastPositionUseCase _saveLastPositionUseCase;
 
   DevicePositionBloc(
-      this._determinePositionUseCase, this._saveLastPositionUseCase)
-      : super(DeviceLocationInitial()) {
+    this._determinePositionUseCase,
+  ) : super(DeviceLocationInitial()) {
     on<DeterminePositionEvent>(onDeterminePosition);
   }
 
@@ -36,9 +46,12 @@ class DevicePositionBloc
             'Location services are off'));
       }
       final position = await _determinePositionUseCase();
-      await _saveLastPositionUseCase(params: position.asString());
 
-      emit(DevicePositionDone(position.asString()));
+      SharedPreferences sf = await SharedPreferences.getInstance();
+      await sf.setString(
+          'latlngAsString', '${position.latitude},${position.longitude}');
+
+      emit(DevicePositionDone(position));
     } catch (e) {
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {

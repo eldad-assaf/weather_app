@@ -1,9 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
+import 'package:weather_app/features/map_view/presentation/widgets/weather_modal_sheet.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
+import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
+import 'package:weather_app/main.dart';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -13,130 +20,133 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
-    bearing: 192.8334901395799,
-    target: LatLng(37.43296265331129, -122.08832357078792),
-    tilt: 59.440717697143555,
-    zoom: 19.151926040649414,
-  );
-
+  GoogleMapController? _mapController;
+  LatLng? middleOfTheMap;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        actions: [
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        body: Stack(children: [
           BlocBuilder<CameraPositionBloc, CameraPositionState>(
             builder: (context, state) {
-              return IconButton(
-                onPressed: () {
-                  _goToTheCameraPosition(
-                      cameraPosition: state.cameraPosition ?? _kGooglePlex);
-                  // context.read<CameraPositionBloc>().add(
-                  //     const DetermineInitialCameraPositionEvent(
-                  //         '37.43296265331129, -122.08832357078792'));
-                },
-                icon: const Icon(Icons.location_searching_rounded),
-              );
+              if (state is CameraPositionInitial) {
+                //should not happen
+                return const Center(child: Text('CameraPositionInitial'));
+              }
+              if (state is CameraPositionLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state is CameraPositionError) {
+                return Center(
+                    child:
+                        Text('CameraPositionError ${state.error.toString()}'));
+              } else if (state is CameraPositionDone) {
+                return buildMap(state: state);
+              } else {
+                return Container(
+                  color: Colors.red,
+                );
+              }
             },
           ),
-        ],
-      ),
-      body: BlocBuilder<CameraPositionBloc, CameraPositionState>(
-        builder: (context, state) {
-          print(state.toString());
-
-          return GoogleMap(
-            mapType: MapType.hybrid,
-            initialCameraPosition: state.cameraPosition ?? _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              print('map created!');
-              _controller.complete(controller);
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
+          backButton(),
+        ]),
+        floatingActionButton: buildFab(context),
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  Positioned backButton() {
+    return Positioned(
+      top: 16,
+      left: 16,
+      child: GestureDetector(
+        onTap: () {
+          //Navigator.pop(context);
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const Home()));
+        },
+        child: Container(
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          width: 35.sp,
+          height: 35.sp,
+          child: Center(
+            child: FaIcon(
+              FontAwesomeIcons.arrowLeft,
+              size: 25.sp,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  Future<void> _goToTheCameraPosition(
-      {required CameraPosition cameraPosition}) async {
-    final GoogleMapController controller = await _controller.future;
-    await controller
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+//Do not move this function to another file, it causes issues
+  FloatingActionButton buildFab(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: () async {
+        context
+            .read<RealtimeWeatherBloc>()
+            .add(FetchRealtimeWeatherEvent(middleOfTheMap!.asString()));
+        await showModalBottomSheet(
+            useSafeArea: true,
+            //barrierColor: Colors.blue,
+            isScrollControlled: true,
+            showDragHandle: true,
+            context: context,
+            builder: (context) {
+              return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+                builder: (context, state) {
+                  if (state is RealtimeWeatherLoading) {
+                    return Container();
+                  } else if (state is RealtimeWeatherDone) {
+                    return WeatherModalSheet(
+                      realtimeWeather: state.realtimeWeather!,
+                    );
+                  } else {
+                    return Container(
+                      height: 550.sp,
+                      color: Colors.red,
+                    );
+                  }
+                },
+              );
+            });
+      },
+      label: const Text('Get weather'),
+      icon: const FaIcon(FontAwesomeIcons.locationArrow),
+    );
+  }
+
+  GoogleMap buildMap({required CameraPositionState state}) {
+    return GoogleMap(
+      mapType: MapType.hybrid,
+      initialCameraPosition: state.cameraPosition!,
+      onMapCreated: (GoogleMapController controller) async {
+        _mapController = controller;
+        _goToThePlace(cameraPosition: state.cameraPosition!);
+      },
+      myLocationButtonEnabled: true,
+      myLocationEnabled: true,
+      onCameraIdle: () async {
+        middleOfTheMap =
+            await _mapController!.getLatLng(const ScreenCoordinate(x: 0, y: 0));
+      },
+      onCameraMove: (cameraPosition) {},
+    );
+  }
+
+  Future<void> _goToThePlace({required CameraPosition cameraPosition}) async {
+    try {
+      await _mapController!
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
-
-
-
-
-// import 'dart:async';
-
-// import 'package:flutter/material.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-
-
-// class MapView extends StatefulWidget {
-//   const MapView({super.key});
-
-//   @override
-//   State<MapView> createState() => MapViewState();
-// }
-
-// class MapViewState extends State<MapView> {
-//   final Completer<GoogleMapController> _controller =
-//       Completer<GoogleMapController>();
-
-//   static const CameraPosition _kGooglePlex = CameraPosition(
-//     target: LatLng(37.42796133580664, -122.085749655962),
-//     zoom: 14.4746,
-//   );
-
-//   static const CameraPosition _kLake = CameraPosition(
-//       bearing: 192.8334901395799,
-//       target: LatLng(37.43296265331129, -122.08832357078792),
-//       tilt: 59.440717697143555,
-//       zoom: 19.151926040649414);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: GoogleMap(
-//         mapType: MapType.hybrid,
-//         initialCameraPosition: _kGooglePlex,
-//         onMapCreated: (GoogleMapController controller) {
-//           _controller.complete(controller);
-//         },
-//       ),
-//       floatingActionButton: FloatingActionButton.extended(
-//         onPressed: _goToTheLake,
-//         label: const Text('To the lake!'),
-//         icon: const Icon(Icons.directions_boat),
-//       ),
-//     );
-//   }
-
-//   Future<void> _goToTheLake() async {
-//     final GoogleMapController controller = await _controller.future;
-//     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-//   }
-// }
