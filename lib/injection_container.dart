@@ -37,7 +37,7 @@ Future<void> initializeDependencies() async {
       CameraPositionRepositoryImpl());
 
     sl.registerSingleton<OpenAI>(OpenAI.instance.build(
-    token: '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',
+    token: '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',
     baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
     enableLog: true,
   ));
