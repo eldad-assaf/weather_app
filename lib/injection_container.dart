@@ -35,15 +35,19 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<CameraPositionRepository>(
       CameraPositionRepositoryImpl());
-
+  try {
+    //Keep it inside a try-catch-block
     sl.registerSingleton<OpenAI>(OpenAI.instance.build(
-    token: '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',
-    baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
-    enableLog: true,
-  ));
+      //TODO: env for token
+      token: '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',
+      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+      enableLog: true,
+    ));
+  } catch (e) {
+    print(e.toString());
+  }
 
   sl.registerSingleton<OpenAIRepository>(OpenAIRepositoryImpl(sl()));
-
 
   //UseCases
 

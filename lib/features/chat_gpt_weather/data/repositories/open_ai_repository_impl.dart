@@ -1,5 +1,6 @@
 import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
 
 class OpenAIRepositoryImpl extends OpenAIRepository {
   final OpenAI _openAI;
@@ -21,5 +22,12 @@ class OpenAIRepositoryImpl extends OpenAIRepository {
     } catch (e) {
       print('getWeatherExplanationFromChatGpt error :  ${e.toString()}');
     }
+  }
+
+  @override
+  String buildQuestionForChatGpt(
+      {required RealtimeWeatherEntity realtimeWeatherEntity}) {
+    print('buildQuestionForChatGpt');
+    return 'eldad';
   }
 }

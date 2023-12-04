@@ -314,8 +314,11 @@ class _GptWeatherState extends State<GptWeather> {
                               MaterialStateProperty.all<Color>(Colors.red),
                         ),
                         onPressed: () {
+                          final e = sl<OpenAIRepository>()
+                              .buildQuestionForChatGpt(
+                                  realtimeWeatherEntity:
+                                      state.realtimeWeather!);
 
-                          //helper method to construct the messageContent
                           sl<OpenAIRepository>()
                               .getWeatherExplanationFromChatGpt(
                                   messageContent: 'messageContent');
