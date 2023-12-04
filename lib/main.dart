@@ -244,6 +244,7 @@ class GptWeather extends StatefulWidget {
 }
 
 class _GptWeatherState extends State<GptWeather> {
+  String? chatResponse;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -308,25 +309,37 @@ class _GptWeatherState extends State<GptWeather> {
                     const SizedBox(
                       height: 22,
                     ),
-                    TextButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.red),
-                        ),
-                        onPressed: () {
-                          final e = sl<OpenAIRepository>()
-                              .buildQuestionForChatGpt(
-                                  realtimeWeatherEntity:
-                                      state.realtimeWeather!);
+                    Center(
+                      child: TextButton(
+                          style: ButtonStyle(
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          onPressed: () async {
+                            final question = sl<OpenAIRepository>()
+                                .buildQuestionForChatGpt(
+                                    realtimeWeatherEntity:
+                                        state.realtimeWeather!);
 
-                          sl<OpenAIRepository>()
-                              .getWeatherExplanationFromChatGpt(
-                                  messageContent: 'messageContent');
-                        },
-                        child: ReusableText(
-                          style: appStyle(33, Colors.white, FontWeight.bold),
-                          text: 'Try me!',
-                        )),
+                            chatResponse = await sl<OpenAIRepository>()
+                                .getWeatherExplanationFromChatGpt(
+                                    messageContent: question);
+                            if (chatResponse != null) {
+                              setState(() {});
+                            }
+                          },
+                          child: ReusableText(
+                            style: appStyle(33, Colors.white, FontWeight.bold),
+                            text: 'Try me!',
+                          )),
+                    ),
+                    chatResponse != null
+                        ? ReusableTextWithAutoSize(
+                            text: chatResponse!,
+                            maxLines: 20,
+                            minFontSize: 15,
+                            style: appStyle(15, Colors.white, FontWeight.w500))
+                        : Container()
                   ],
                 ),
               ),

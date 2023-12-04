@@ -39,7 +39,9 @@ Future<void> initializeDependencies() async {
     //Keep it inside a try-catch-block
     sl.registerSingleton<OpenAI>(OpenAI.instance.build(
       //TODO: env for token
-      token: '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',
+
+      // OpenAI may also automatically disable any API key that we've found has leaked publicly.
+      token: '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',
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
       enableLog: true,
     ));

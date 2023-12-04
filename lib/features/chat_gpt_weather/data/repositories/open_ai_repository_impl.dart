@@ -8,26 +8,46 @@ class OpenAIRepositoryImpl extends OpenAIRepository {
   OpenAIRepositoryImpl(this._openAI);
 
   @override
-  Future<void> getWeatherExplanationFromChatGpt(
+  Future<String?> getWeatherExplanationFromChatGpt(
       {required String messageContent}) async {
     try {
       final request = ChatCompleteText(messages: [
-        Messages(role: Role.user, content: 'say 30 names for boys'),
+        Messages(role: Role.user, content: messageContent),
       ], maxToken: 200, model: ChatModelFromValue(model: 'gpt-3.5-turbo-1106'));
       final ChatCTResponse? response =
           await _openAI.onChatCompletion(request: request);
       for (var element in response!.choices) {
-        print("data -> ${element.message?.content}");
+        print("AI Suggests :  -> ${element.message?.content}");
+        return element.message?.content;
       }
     } catch (e) {
       print('getWeatherExplanationFromChatGpt error :  ${e.toString()}');
     }
+    return null;
   }
 
   @override
   String buildQuestionForChatGpt(
       {required RealtimeWeatherEntity realtimeWeatherEntity}) {
-    print('buildQuestionForChatGpt');
-    return 'eldad';
+    String basic =
+        'write a short text about the weather, suggest what to wear and tell the user if this is the typical weather of the place.';
+    String theWeather =
+        'the location name is ${realtimeWeatherEntity.loactionName} , the temp in celcius is ${realtimeWeatherEntity.tempC} , the condition text is ${realtimeWeatherEntity.conditionText} ,wind in kph is ${realtimeWeatherEntity.windKph} , clouds is ${realtimeWeatherEntity.cloud.toString()} and uv is ${realtimeWeatherEntity.uv.toString()}      ';
+    return basic + theWeather;
   }
 }
+
+
+// final String? loactionName;
+//   final double? tempC;
+//   final double? tempF;
+//   final int? isDay;
+//   final String? conditionText;
+//   final String? conditionIcon;
+//   final int? conditionCode;
+//   final String? localTime;
+//   final String? lastUpdated;
+//   final double? windMph;
+//   final double? windKph;
+//   final int? cloud;
+//   final double? uv;
