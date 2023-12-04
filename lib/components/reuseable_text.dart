@@ -25,12 +25,13 @@ class ReusableTextWithAutoSize extends StatelessWidget {
   final String text;
   final int? maxLines;
   final double minFontSize;
-  const ReusableTextWithAutoSize({
-    super.key,
-    required this.text,
-    required this.maxLines,
-    required this.minFontSize,
-  });
+  final TextStyle style;
+  const ReusableTextWithAutoSize(
+      {super.key,
+      required this.text,
+      required this.maxLines,
+      required this.minFontSize,
+      required this.style});
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,7 @@ class ReusableTextWithAutoSize extends StatelessWidget {
       minFontSize: minFontSize,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
+      style: style,
     );
   }
 }

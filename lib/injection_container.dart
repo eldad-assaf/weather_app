@@ -1,11 +1,14 @@
+// ignore_for_file: avoid_print
+
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:weather_app/features/chat_gpt_weather/data/repositories/open_ai_repository_impl.dart';
+import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/device_position/data/repositories/device_location_repository_impl.dart';
 import 'package:weather_app/features/device_position/domain/repositories/device_location_repository.dart';
 import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
-import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
-
 import 'package:weather_app/features/map_view/data/repositories/camera_position_repository_impl.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
@@ -15,6 +18,7 @@ import 'package:weather_app/features/realtime_weather/data/datasources/remote/re
 import 'package:weather_app/features/realtime_weather/data/repositories/realtime_weather_repository_impl.dart';
 import 'package:weather_app/features/realtime_weather/domain/repositories/realtime_weather_repository.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
@@ -35,6 +39,20 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CameraPositionRepository>(
       CameraPositionRepositoryImpl());
 
+  try {
+    //Keep it inside a try-catch-block
+    sl.registerSingleton<OpenAI>(OpenAI.instance.build(
+      // OpenAI may also automatically disable any API key that we've found has leaked publicly.
+      token: dotenv.env['CHAT_API_KEY'],
+      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
+      enableLog: true,
+    ));
+  } catch (e) {
+    print(e.toString());
+  }
+
+  sl.registerSingleton<OpenAIRepository>(OpenAIRepositoryImpl(sl()));
+
   //UseCases
 
   sl.registerSingleton<FetchRealtimeWeatherUseCase>(
@@ -42,7 +60,6 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<DeterminePositionUseCase>(
       DeterminePositionUseCase(sl()));
-
 
   sl.registerSingleton<DetermineInitialCameraPositionUseCase>(
       DetermineInitialCameraPositionUseCase(sl()));
@@ -55,7 +72,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RealtimeWeatherBloc>(() => RealtimeWeatherBloc(sl()));
   sl.registerFactory<DevicePositionBloc>(() => DevicePositionBloc(
         sl(),
-      
       ));
   sl.registerFactory<CameraPositionBloc>(() => CameraPositionBloc(sl(), sl()));
 }

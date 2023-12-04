@@ -76,7 +76,9 @@ class RealtimeWeather extends StatelessWidget {
                             SizedBox(
                               height: 50.sp,
                             ),
-                            ReusableText(
+                            ReusableTextWithAutoSize(
+                              maxLines: 1,
+                              minFontSize: 15,
                               style: appStyle(
                                 30,
                                 Colors.white,
