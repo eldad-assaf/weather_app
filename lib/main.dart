@@ -240,7 +240,7 @@ class Home extends StatelessWidget {
 
 class GptWeather extends StatefulWidget {
   const GptWeather({super.key});
-//TODO : refactor GptWeather widget
+//TODO : refactor GptWeather widget (Cubit?)
 
   @override
   State<GptWeather> createState() => _GptWeatherState();
@@ -328,6 +328,7 @@ class _GptWeatherState extends State<GptWeather> {
                                 .getWeatherExplanationFromChatGpt(
                                     messageContent: question);
                             if (chatResponse != null) {
+
                               setState(() {});
                             }
                           },
