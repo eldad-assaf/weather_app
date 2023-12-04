@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +15,6 @@ import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_a
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/pages/home/map_view.dart';
-import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 import 'package:weather_app/injection_container.dart';
@@ -22,6 +22,7 @@ import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
 
 void main() async {
+  await dotenv.load(fileName: ".env");// must load this before initializeDependencies()
   await initializeDependencies();
   Bloc.observer = const AppBlocObserver();
 
@@ -82,6 +83,7 @@ class _MyAppState extends State<MyApp> {
 
 class Home extends StatelessWidget {
   const Home({super.key});
+//TODO : refactor home widget
 
   @override
   Widget build(BuildContext context) {
@@ -238,6 +240,7 @@ class Home extends StatelessWidget {
 
 class GptWeather extends StatefulWidget {
   const GptWeather({super.key});
+//TODO : refactor GptWeather widget
 
   @override
   State<GptWeather> createState() => _GptWeatherState();

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +18,7 @@ import 'package:weather_app/features/realtime_weather/data/datasources/remote/re
 import 'package:weather_app/features/realtime_weather/data/repositories/realtime_weather_repository_impl.dart';
 import 'package:weather_app/features/realtime_weather/domain/repositories/realtime_weather_repository.dart';
 import 'package:weather_app/features/realtime_weather/domain/usecases/fetch_realtime_weather.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
@@ -35,13 +38,12 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<CameraPositionRepository>(
       CameraPositionRepositoryImpl());
+
   try {
     //Keep it inside a try-catch-block
     sl.registerSingleton<OpenAI>(OpenAI.instance.build(
-      //TODO: env for token
-
       // OpenAI may also automatically disable any API key that we've found has leaked publicly.
-      token: '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',
+      token: dotenv.env['CHAT_API_KEY'],
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
       enableLog: true,
     ));
