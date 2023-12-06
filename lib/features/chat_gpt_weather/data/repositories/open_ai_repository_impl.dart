@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:weather_app/features/realtime_weather/domain/entities/realtime_weather.dart';

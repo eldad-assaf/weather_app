@@ -64,8 +64,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DetermineInitialCameraPositionUseCase>(
       DetermineInitialCameraPositionUseCase(sl()));
 
-  sl.registerSingleton<DetermineCameraPositionUseCase>(
-      DetermineCameraPositionUseCase(sl()));
+  sl.registerSingleton<SaveLastCameraPositionToSfUseCase>(
+      SaveLastCameraPositionToSfUseCase(sl()));
 
   //Blocs
 

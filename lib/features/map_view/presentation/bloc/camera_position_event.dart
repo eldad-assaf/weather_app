@@ -1,16 +1,20 @@
 part of 'camera_position_bloc.dart';
 
 abstract class CameraPositionEvent extends Equatable {
-  final Position? position;
-  const CameraPositionEvent({this.position});
+  final LatLng? latLng;
+
+
+  const CameraPositionEvent({this.latLng});
 
   @override
-  List<Object?> get props => [position];
+  List<Object?> get props => [latLng];
 }
 
 class DetermineInitialCameraPositionEvent extends CameraPositionEvent {
-  const DetermineInitialCameraPositionEvent():super();
+  const DetermineInitialCameraPositionEvent() : super();
 }
-class DetermineCameraPositionEvent extends CameraPositionEvent {
-  const DetermineCameraPositionEvent(Position? position):super(position: position);
+
+class SaveLastCameraPositionToSfEvent extends CameraPositionEvent {
+  const SaveLastCameraPositionToSfEvent(LatLng? latLng)
+      : super(latLng: latLng);
 }

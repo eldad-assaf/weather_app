@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: unused_element
+
 part of 'realtime_weather_api_service.dart';
 
 // **************************************************************************
@@ -32,7 +34,7 @@ class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<RealtimeWeatherModel>>(Options(
       method: 'GET',

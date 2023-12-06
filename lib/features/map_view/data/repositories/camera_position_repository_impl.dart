@@ -1,4 +1,5 @@
-import 'package:geolocator/geolocator.dart';
+// ignore_for_file: avoid_print
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
@@ -10,6 +11,7 @@ class CameraPositionRepositoryImpl extends CameraPositionRepository {
     final lat = sf.getString('lat');
     final lng = sf.getString('lng');
     if (lat != null && lng != null) {
+      print('succes sf data lat : $lat lng: $lng ');
       return _buildCameraPoistion(
           lat: double.parse(lat), lng: double.parse(lng));
     } else {
@@ -19,13 +21,11 @@ class CameraPositionRepositoryImpl extends CameraPositionRepository {
   }
 
   @override
-  Future<CameraPosition> determineCameraPosition(Position position) async {
+  Future<void> saveLastCameraPositionToSf(LatLng latLng) async {
     //save the device position to sf
     final sf = await SharedPreferences.getInstance();
-    await sf.setString('lat', position.latitude.toString());
-    await sf.setString('lng', position.longitude.toString());
-    return _buildCameraPoistion(
-        lat: position.latitude, lng: position.longitude);
+    await sf.setString('lat', latLng.latitude.toString());
+    await sf.setString('lng', latLng.longitude.toString());
   }
 }
 
