@@ -9,10 +9,7 @@ part of 'realtime_weather_api_service.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
-  _RealtimeWeatherApiService(
-    this._dio, {
-    this.baseUrl,
-  }) {
+  _RealtimeWeatherApiService(this._dio) {
     baseUrl ??= 'https://api.weatherapi.com/v1';
   }
 
@@ -32,7 +29,7 @@ class _RealtimeWeatherApiService implements RealtimeWeatherApiService {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<RealtimeWeatherModel>>(Options(
       method: 'GET',

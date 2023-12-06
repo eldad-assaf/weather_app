@@ -9,7 +9,6 @@ import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime
 import '../../../../../components/reuseable_text.dart';
 import '../../bloc/realtime_weather_state.dart';
 
-//AIzaSyCBP7TIlhTt1sQ9DlsGf2Qy--2agCxcnoU
 class RealtimeWeather extends StatelessWidget {
   const RealtimeWeather({super.key});
 
@@ -70,9 +69,7 @@ class RealtimeWeather extends StatelessWidget {
                               ),
                               text: "${state.realtimeWeather?.tempC}C",
                             ),
-                            SizedBox(
-                                width: ScreenUtil().setWidth(222),
-                                child: const Divider()),
+                            SizedBox(width: 222.sp, child: const Divider()),
                             SizedBox(
                               height: 50.sp,
                             ),
@@ -98,6 +95,19 @@ class RealtimeWeather extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding:
+                          EdgeInsets.only(bottom: 50.sp, right: 3, left: 1),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: ReusableTextWithAutoSize(
+                          text: 'swipe to see AI recommendations ',
+                          maxLines: 1,
+                          minFontSize: 14,
+                          style: appStyle(22, Colors.amber, FontWeight.bold),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

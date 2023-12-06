@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/features/device_position/domain/usecases/determine_position.dart';
-import 'package:weather_app/features/device_position/domain/usecases/save_last_position.dart';
 part 'device_position_event.dart';
 part 'device_position_state.dart';
 
