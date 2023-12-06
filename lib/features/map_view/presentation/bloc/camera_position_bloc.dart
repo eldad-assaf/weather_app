@@ -2,7 +2,6 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_camera_position.dart';
 import 'package:weather_app/features/map_view/domain/usecases/determine_initial_camera_position.dart';
@@ -13,13 +12,13 @@ class CameraPositionBloc
     extends Bloc<CameraPositionEvent, CameraPositionState> {
   final DetermineInitialCameraPositionUseCase
       _determineInitialCameraPositionUseCase;
-  final DetermineCameraPositionUseCase _determineCameraPositionUseCase;
+  final SaveLastCameraPositionToSfUseCase _saveLastCameraPositionToSfUseCase;
 
   CameraPositionBloc(this._determineInitialCameraPositionUseCase,
-      this._determineCameraPositionUseCase)
+      this._saveLastCameraPositionToSfUseCase)
       : super(CameraPositionInitial()) {
     on<DetermineInitialCameraPositionEvent>(onDetermineInitialCameraPosition);
-    on<DetermineCameraPositionEvent>(onDetermineCameraPosition);
+    on<SaveLastCameraPositionToSfEvent>(onSaveLastCameraPositionToSf);
   }
 
   void onDetermineInitialCameraPosition(
@@ -28,9 +27,10 @@ class CameraPositionBloc
   ) async {
     try {
       emit(CameraPositionLoading());
-
+      print('onDetermineInitialCameraPosition');
       final initialCameraPosition =
           await _determineInitialCameraPositionUseCase();
+      print('initialCameraPosition : $initialCameraPosition');
       emit(CameraPositionDone(initialCameraPosition));
     } catch (e) {
       emit(CameraPositionError(e));
@@ -38,19 +38,16 @@ class CameraPositionBloc
     }
   }
 
-  void onDetermineCameraPosition(
-    DetermineCameraPositionEvent event,
+  void onSaveLastCameraPositionToSf(
+    SaveLastCameraPositionToSfEvent event,
     Emitter<CameraPositionState> emit,
   ) async {
     try {
-      emit(CameraPositionLoading());
-
-      final cameraPosition =
-          await _determineCameraPositionUseCase(params: event.position);
-
-      emit(CameraPositionDone(cameraPosition));
+      await _saveLastCameraPositionToSfUseCase(params: event.latLng);
+//TODO: should emit error state or not? its just saves to sf .
+      //emit(CameraPositionDone(cameraPosition));
     } catch (e) {
-      emit(CameraPositionError(e));
+      //emit(CameraPositionError(e));
       print(e.toString());
     }
   }

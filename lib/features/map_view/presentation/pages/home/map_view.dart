@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,12 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
+
   GoogleMapController? _mapController;
   LatLng? middleOfTheMap;
   @override
@@ -137,7 +145,14 @@ class MapViewState extends State<MapView> {
         middleOfTheMap =
             await _mapController!.getLatLng(const ScreenCoordinate(x: 0, y: 0));
       },
-      onCameraMove: (cameraPosition) {},
+      onCameraMove: (CameraPosition cameraPosition) {
+        context.read<CameraPositionBloc>().add(
+              SaveLastCameraPositionToSfEvent(
+                LatLng(cameraPosition.target.latitude,
+                    cameraPosition.target.longitude),
+              ),
+            );
+      },
     );
   }
 

@@ -1,19 +1,14 @@
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weather_app/features/map_view/domain/repositories/camera_poistion_repository.dart';
 import '../../../../core/usecase/usecase.dart';
 
-class DetermineCameraPositionUseCase implements UseCase<CameraPosition, Position> {
-   final CameraPositionRepository _cameraPositionRepository;
-  DetermineCameraPositionUseCase(this._cameraPositionRepository);
-  
+
+class SaveLastCameraPositionToSfUseCase implements UseCase<void, LatLng> {
+  final CameraPositionRepository _cameraPositionRepository;
+  SaveLastCameraPositionToSfUseCase(this._cameraPositionRepository);
+
   @override
-  Future<CameraPosition> call({Position? params}) {
-  return _cameraPositionRepository.determineCameraPosition(params!);
+  Future<void> call({LatLng? params}) {
+    return _cameraPositionRepository.saveLastCameraPositionToSf(params!);
   }
-
-
 }
-
-
-
