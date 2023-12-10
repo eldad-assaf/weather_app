@@ -13,6 +13,8 @@ import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
 
 void main() async {
+  //**The .env file is in gitignore , you will have to create your own openAI key. */
+  //**ONCE THE KEY IS UPLOADED TO GIT IT IS BLOCKED AUTOMATICALLY  */
   await dotenv.load(
       fileName: ".env"); // must load this before initializeDependencies()
   await initializeDependencies();
