@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
+import 'package:weather_app/core/extensions/extension_methods.dart';
 import 'package:weather_app/features/map_view/presentation/widgets/weather_modal_sheet.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
