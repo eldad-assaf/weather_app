@@ -96,8 +96,8 @@ class RealtimeWeather extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.only(bottom: 50.sp, right: 3, left: 1),
+                      padding: EdgeInsets.only(
+                          bottom: 50.sp, right: 13.sp, left: 13.sp),
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: ReusableTextWithAutoSize(

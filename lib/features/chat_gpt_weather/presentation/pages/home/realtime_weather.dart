@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
@@ -68,28 +69,44 @@ class _WeatherAIState extends State<WeatherAI> {
                   ),
                   Center(
                     child: TextButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.red),
-                        ),
-                        onPressed: () async {
-                          final question = sl<OpenAIRepository>()
-                              .buildQuestionForChatGpt(
-                                  realtimeWeatherEntity:
-                                      state.realtimeWeather!);
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.red),
+                      ),
+                      onPressed: () async {
+                        final question = sl<OpenAIRepository>()
+                            .buildQuestionForChatGpt(
+                                realtimeWeatherEntity: state.realtimeWeather!);
 
-                          chatResponse = await sl<OpenAIRepository>()
-                              .getWeatherExplanationFromChatGpt(
-                                  messageContent: question);
-                          if (chatResponse != null) {
-                            setState(() {});
-                          }
-                        },
-                        child: ReusableText(
-                          style: appStyle(33, Colors.white, FontWeight.bold),
-                          text: 'Try me!',
-                        )),
+                        chatResponse = await sl<OpenAIRepository>()
+                            .getWeatherExplanationFromChatGpt(
+                                messageContent: question);
+                        if (chatResponse != null) {
+                          setState(() {});
+                        }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: const FaIcon(FontAwesomeIcons.robot)),
+                          ReusableText(
+                            style: appStyle(13, Colors.white, FontWeight.bold),
+                            text: 'Try me!',
+                          ),
+                        ],
+                      ),
+                      // child: ReusableText(
+                      //   style: appStyle(33, Colors.white, FontWeight.bold),
+                      //   text: 'Try me!',
+                      // ),
+                    ),
                   ),
+                  // ReusableText(
+                  //        style: appStyle(33, Colors.white, FontWeight.bold),
+                  //        text: 'Try me!',
+                  //      ),
                   chatResponse != null
                       ? ReusableTextWithAutoSize(
                           text: chatResponse!,
