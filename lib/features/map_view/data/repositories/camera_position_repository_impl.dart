@@ -6,19 +6,20 @@ import 'package:weather_app/features/map_view/domain/repositories/camera_poistio
 
 class CameraPositionRepositoryImpl extends CameraPositionRepository {
   @override
+  //**Checks in SF for the last CameraPosition - if not available then it shows 'Jerusalem on the map' */
   Future<CameraPosition> determineInitialCameraPosition() async {
     final sf = await SharedPreferences.getInstance();
     final lat = sf.getString('lat');
     final lng = sf.getString('lng');
     if (lat != null && lng != null) {
-      print('succes sf data lat : $lat lng: $lng ');
       return _buildCameraPoistion(
           lat: double.parse(lat), lng: double.parse(lng));
     } else {
-      //jerusalem
       return _buildCameraPoistion(lat: 31.766982, lng: 35.213685);
     }
   }
+
+  //**For saving the last CameraPosition of the map ' */
 
   @override
   Future<void> saveLastCameraPositionToSf(LatLng latLng) async {

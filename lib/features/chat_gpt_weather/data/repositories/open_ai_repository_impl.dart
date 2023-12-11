@@ -24,6 +24,7 @@ class OpenAIRepositoryImpl extends OpenAIRepository {
       }
     } catch (e) {
       print('getWeatherExplanationFromChatGpt error :  ${e.toString()}');
+      rethrow;
     }
     return null;
   }

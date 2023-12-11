@@ -25,7 +25,6 @@ class RealtimeWeatherRepositoryImpl extends RealtimeWeatherRepository {
       final httpResponse = await _realtimeWeatherApiService.getRealtimeWeather(
           dotenv.env['WEATHER_API_KEY'], position);
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        print('ok');
         print(httpResponse.data.loactionName);
         return DataSucess(httpResponse.data);
       } else {

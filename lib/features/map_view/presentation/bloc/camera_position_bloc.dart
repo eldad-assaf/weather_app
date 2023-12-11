@@ -27,10 +27,8 @@ class CameraPositionBloc
   ) async {
     try {
       emit(CameraPositionLoading());
-      print('onDetermineInitialCameraPosition');
       final initialCameraPosition =
           await _determineInitialCameraPositionUseCase();
-      print('initialCameraPosition : $initialCameraPosition');
       emit(CameraPositionDone(initialCameraPosition));
     } catch (e) {
       emit(CameraPositionError(e));

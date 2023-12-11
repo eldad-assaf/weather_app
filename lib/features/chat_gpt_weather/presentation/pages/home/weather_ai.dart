@@ -30,9 +30,7 @@ class _WeatherAIState extends State<WeatherAI> {
               child: CircularProgressIndicator(),
             );
           }
-          if (state is RealtimeWeatherError) {
-            errorHandler(context, state);
-          }
+
           if (state is RealtimeWeatherDone) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -74,15 +72,20 @@ class _WeatherAIState extends State<WeatherAI> {
                             MaterialStateProperty.all<Color>(Colors.red),
                       ),
                       onPressed: () async {
-                        final question = sl<OpenAIRepository>()
-                            .buildQuestionForChatGpt(
-                                realtimeWeatherEntity: state.realtimeWeather!);
+                        try {
+                          final question = sl<OpenAIRepository>()
+                              .buildQuestionForChatGpt(
+                                  realtimeWeatherEntity:
+                                      state.realtimeWeather!);
 
-                        chatResponse = await sl<OpenAIRepository>()
-                            .getWeatherExplanationFromChatGpt(
-                                messageContent: question);
-                        if (chatResponse != null) {
-                          setState(() {});
+                          chatResponse = await sl<OpenAIRepository>()
+                              .getWeatherExplanationFromChatGpt(
+                                  messageContent: question);
+                          if (chatResponse != null) {
+                            setState(() {});
+                          }
+                        } catch (e) {
+                          errorHandler(context, null);
                         }
                       },
                       child: Row(
@@ -97,16 +100,8 @@ class _WeatherAIState extends State<WeatherAI> {
                           ),
                         ],
                       ),
-                      // child: ReusableText(
-                      //   style: appStyle(33, Colors.white, FontWeight.bold),
-                      //   text: 'Try me!',
-                      // ),
                     ),
                   ),
-                  // ReusableText(
-                  //        style: appStyle(33, Colors.white, FontWeight.bold),
-                  //        text: 'Try me!',
-                  //      ),
                   chatResponse != null
                       ? ReusableTextWithAutoSize(
                           text: chatResponse!,

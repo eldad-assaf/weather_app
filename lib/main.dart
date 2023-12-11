@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/components/app_bar_widget.dart';
-import 'package:weather_app/features/chat_gpt_weather/presentation/pages/home/realtime_weather.dart';
+import 'package:weather_app/components/error_handler.dart';
+import 'package:weather_app/components/reuseable_text.dart';
+import 'package:weather_app/components/text_style.dart';
+import 'package:weather_app/core/helpers/helpers_methods.dart';
+import 'package:weather_app/features/chat_gpt_weather/presentation/pages/home/weather_ai.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
@@ -50,6 +54,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        //**When app starts the weather is fetched without the device's position*/
         BlocProvider<RealtimeWeatherBloc>(
           create: (context) => sl()..add(const FetchRealtimeWeatherEvent(null)),
         ),
@@ -61,7 +66,8 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: ScreenUtilInit(
-        designSize: const Size(393, 851), // PIXEL 5
+        //**Design size for Pixel 5 device */
+        designSize: const Size(393, 851),
         child: MaterialApp(
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -81,7 +87,12 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PageController controller = PageController();
-    return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+    return BlocConsumer<RealtimeWeatherBloc, RealtimeWeatherState>(
+      listener: (context, state) {
+        if (state is RealtimeWeatherError) {
+          errorHandler(context, state);
+        }
+      },
       builder: (context, state) {
         if (state is RealtimeWeatherInitial ||
             state is RealtimeWeatherLoading) {
@@ -89,13 +100,7 @@ class Home extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        if (state is RealtimeWeatherError) {
-          return const Scaffold(
-            body: Center(
-                child: Text(
-                    'Opps, something went wrong with the weather service,\n please try again later')),
-          );
-        }
+     
         if (state is RealtimeWeatherDone) {
           return SafeArea(
             child: Scaffold(
@@ -114,16 +119,24 @@ class Home extends StatelessWidget {
               ),
             ),
           );
+        } else if (state is RealtimeWeatherError) {
+          //   //**Change the WEATHER_API_KEY to emulate an error */
+
+          final errMsg = setErrorMsg(state);
+          return Scaffold(
+              backgroundColor: Colors.black,
+              appBar: const AppBarWidget(),
+              body: Center(
+                child: ReusableTextWithAutoSize(
+                    style: appStyle(16, Colors.white, FontWeight.bold),
+                    maxLines: 2,
+                    minFontSize: 12,
+                    text: errMsg),
+              ));
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return Container();
         }
       },
     );
   }
 }
-
-
-
-// 
