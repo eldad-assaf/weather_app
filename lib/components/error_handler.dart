@@ -5,11 +5,15 @@ import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
-errorHandler(BuildContext context, RealtimeWeatherError state) {
+errorHandler(BuildContext context, RealtimeWeatherError? state) {
   String errMsg = 'Something went wrong, try again later';
 
-  if (state.error != null && state.error!.response != null) {
-    errMsg = state.error!.response!.data['error']['message'];
+  if (state != null) {
+    //**Handle the error from the RealtimeWeatherBloc  */
+    if (state.error != null && state.error!.response != null) {
+      errMsg = state.error!.response!.data['error']['message'];
+    }
+    
   }
 
   AlertDialogModel(
