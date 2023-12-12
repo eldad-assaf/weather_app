@@ -20,6 +20,7 @@ class WeatherAI extends StatefulWidget {
 
 class _WeatherAIState extends State<WeatherAI> {
   String? chatResponse;
+  bool loadingAiResponse = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -54,46 +55,47 @@ class _WeatherAIState extends State<WeatherAI> {
                       FontWeight.normal,
                     ),
                   ),
-                  Center(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.red),
-                      ),
-                      onPressed: () async {
-                        try {
-                          final question = sl<OpenAIRepository>()
-                              .buildQuestionForChatGpt(
-                                  realtimeWeatherEntity:
-                                      state.realtimeWeather!);
-
-                          chatResponse = await sl<OpenAIRepository>()
-                              .getWeatherExplanationFromChatGpt(
-                                  messageContent: question);
-                          if (chatResponse != null) {
-                            setState(() {});
-                          }
-                        } on Exception catch (e) {
-                          final context = widget.scaffoldKey.currentContext;
-                          if (context != null && context.mounted) {
-                            errorHandler(context, null, e);
-                          }
-                        }
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const FaIcon(FontAwesomeIcons.robot)),
-                          ReusableText(
-                            style: appStyle(13, Colors.white, FontWeight.bold),
-                            text: 'Try me!',
+                  loadingAiResponse
+                      ? const CircularProgressIndicator()
+                      : TextButton.icon(
+                          icon: FaIcon(
+                            FontAwesomeIcons.robot,
+                            color: Colors.red,
+                            size: 40.sp,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          label: ReusableText(
+                            text: 'try me!',
+                            style: appStyle(22, Colors.red, FontWeight.bold),
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              loadingAiResponse = true;
+                            });
+                            try {
+                              final question = sl<OpenAIRepository>()
+                                  .buildQuestionForChatGpt(
+                                      realtimeWeatherEntity:
+                                          state.realtimeWeather!);
+
+                              chatResponse = await sl<OpenAIRepository>()
+                                  .getWeatherExplanationFromChatGpt(
+                                      messageContent: question);
+                              if (chatResponse != null) {
+                                setState(() {
+                                  loadingAiResponse = false;
+                                });
+                              }
+                            } on Exception catch (e) {
+                              final context = widget.scaffoldKey.currentContext;
+                              if (context != null && context.mounted) {
+                                setState(() {
+                                  loadingAiResponse = false;
+                                });
+                                errorHandler(context, null, e);
+                              }
+                            }
+                          },
+                        ),
                   chatResponse != null
                       ? ReusableTextWithAutoSize(
                           text: chatResponse!,

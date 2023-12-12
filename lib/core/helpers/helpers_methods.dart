@@ -46,3 +46,24 @@ Widget getWeatherIcon(int code) {
       );
   }
 }
+
+String handleHttpStatus(int? httpStatusCode) {
+  String errMsg;
+  switch (httpStatusCode) {
+    case null:
+      errMsg = 'Unknown Error!';
+    case 401:
+      errMsg = '"Unauthorized: API key not provided or invalid."';
+
+      break;
+    case 400:
+      errMsg = "Bad Request: Check the request parameters.";
+      break;
+    case 403:
+      errMsg = "Forbidden: API key issues or access denied.";
+      break;
+    default:
+      errMsg = "Unhandled HTTP Status Code: $httpStatusCode";
+  }
+  return errMsg;
+}

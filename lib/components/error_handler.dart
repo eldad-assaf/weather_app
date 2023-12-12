@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/alert_dialog_model.dart';
-import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
-import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
 errorHandler(
@@ -24,16 +21,5 @@ errorHandler(
   }
 
   AlertDialogModel(title: 'Opps!', message: errMsg, buttons: const {'OK': true})
-      .present(context)
-      .then((value) {
-    //TODO: set back the state to initial
-
-    if (state != null) {
-      //**If the error is coming from the RealtimeWeatherBloc then it will change the state back to Initial state  */
-      BlocProvider.of<RealtimeWeatherBloc>(context)
-          .add(const FetchRealtimeWeatherEvent(null));
-    }
-    // BlocProvider.of<RealtimeWeatherBloc>(context)
-    //     .add(const FetchRealtimeWeatherEvent(null));
-  });
+      .present(context);
 }

@@ -1,4 +1,8 @@
+// ignore_for_file: avoid_print
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +16,7 @@ import 'package:weather_app/features/device_position/presentation/bloc/device_po
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
+import 'package:weather_app/features/realtime_weather/presentation/pages/error_screen.dart';
 import 'package:weather_app/injection_container.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
@@ -101,8 +106,10 @@ class _HomeState extends State<Home> {
         }
       },
       builder: (context, state) {
-        if (state is RealtimeWeatherInitial ||
-            state is RealtimeWeatherLoading) {
+        if (state is RealtimeWeatherInitial) {
+          return const Center();
+        }
+        if (state is RealtimeWeatherLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -129,24 +136,14 @@ class _HomeState extends State<Home> {
               ),
             ),
           );
-        } else if (state is RealtimeWeatherError) {
-          //   //**Change the WEATHER_API_KEY to emulate an error */
-
-          final errMsg = setErrorMsg(state);
-          return Scaffold(
-              backgroundColor: Colors.black,
-              appBar: const AppBarWidget(),
-              body: Center(
-                child: ReusableTextWithAutoSize(
-                    style: appStyle(16, Colors.white, FontWeight.bold),
-                    maxLines: 2,
-                    minFontSize: 12,
-                    text: errMsg),
-              ));
         } else {
-          return Container();
+          print(state.error);
+          return ErrorScreen(dioException: state.error!);
         }
       },
     );
   }
 }
+
+
+

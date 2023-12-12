@@ -32,14 +32,6 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       title: ReusableText(
           text: 'Weather', style: appStyle(18, Colors.white, FontWeight.w300)),
       actions: [
-        //**For testing sf data persistence */
-        // IconButton(
-        //     color: Colors.red,
-        //     onPressed: () async {
-        //       SharedPreferences sf = await SharedPreferences.getInstance();
-        //       await sf.clear();
-        //     },
-        //     icon: const Icon(Icons.delete)),
         BlocListener<DevicePositionBloc, DevicePositionState>(
           listener: (context, state) {
             if (state is DevicePositionDone) {
@@ -115,7 +107,6 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
             onPressed: () {
-              
               context
                   .read<CameraPositionBloc>()
                   .add(const DetermineInitialCameraPositionEvent());

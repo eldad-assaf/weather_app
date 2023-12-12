@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:weather_app/components/error_handler.dart';
 import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/config/theme/app_background.dart';
 import 'package:weather_app/core/helpers/helpers_methods.dart';
