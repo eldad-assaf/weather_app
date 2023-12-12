@@ -1,16 +1,11 @@
 // ignore_for_file: avoid_print
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather_app/components/app_bar_widget.dart';
 import 'package:weather_app/components/error_handler.dart';
-import 'package:weather_app/components/reuseable_text.dart';
-import 'package:weather_app/components/text_style.dart';
-import 'package:weather_app/core/helpers/helpers_methods.dart';
 import 'package:weather_app/features/chat_gpt_weather/presentation/pages/home/weather_ai.dart';
 import 'package:weather_app/features/device_position/presentation/bloc/device_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
@@ -129,9 +124,7 @@ class _HomeState extends State<Home> {
                 controller: controller,
                 children: <Widget>[
                   const RealtimeWeather(),
-                  WeatherAI(
-                    scaffoldKey: key,
-                  ),
+                  WeatherAI(scaffoldKey: key),
                 ],
               ),
             ),
@@ -144,6 +137,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
-

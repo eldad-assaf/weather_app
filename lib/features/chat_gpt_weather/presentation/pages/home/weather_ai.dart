@@ -26,8 +26,7 @@ class _WeatherAIState extends State<WeatherAI> {
     return SafeArea(
       child: BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
         builder: (context, state) {
-          if (state is RealtimeWeatherInitial ||
-              state is RealtimeWeatherLoading) {
+          if (state is RealtimeWeatherLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
