@@ -5,7 +5,10 @@ import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
-errorHandler(BuildContext context, RealtimeWeatherError? state) {
+errorHandler(
+    BuildContext context, RealtimeWeatherError? state, Exception? openAIError) {
+  //This error handler is for both errors that comes from the RealtimeWeatherBloc, try/catch block and openAIAuthError
+  //in the cases from the try/catch blocks a scaffold key is required ! it is  using the context in async operation.
   String errMsg = 'Something went wrong, try again later';
 
   if (state != null) {
@@ -13,19 +16,24 @@ errorHandler(BuildContext context, RealtimeWeatherError? state) {
     if (state.error != null && state.error!.response != null) {
       errMsg = state.error!.response!.data['error']['message'];
     }
-    
   }
 
-  AlertDialogModel(
-      title: 'Opps!',
-      //message: "${state.error!.message}",//The request returned an invalid status code of 400.
-      //message: "${state.error!.error}", //null
-      //message: "${state.error!.response!.statusMessage}", //bad request
-      //message: "${state.error!.response!.statusCode}", //400
-      //message: "${state.error!.response!.data}", //{error: {code: 1006, message: No matching location found.}}
-      message: errMsg,
-      buttons: const {'OK': true}).present(context).then((value) {
-    BlocProvider.of<RealtimeWeatherBloc>(context)
-        .add(const FetchRealtimeWeatherEvent(null));
+  if (openAIError != null) {
+    errMsg =
+        'Something went wrong with the AI service, please check with the app admin';
+  }
+
+  AlertDialogModel(title: 'Opps!', message: errMsg, buttons: const {'OK': true})
+      .present(context)
+      .then((value) {
+    //TODO: set back the state to initial
+
+    if (state != null) {
+      //**If the error is coming from the RealtimeWeatherBloc then it will change the state back to Initial state  */
+      BlocProvider.of<RealtimeWeatherBloc>(context)
+          .add(const FetchRealtimeWeatherEvent(null));
+    }
+    // BlocProvider.of<RealtimeWeatherBloc>(context)
+    //     .add(const FetchRealtimeWeatherEvent(null));
   });
 }

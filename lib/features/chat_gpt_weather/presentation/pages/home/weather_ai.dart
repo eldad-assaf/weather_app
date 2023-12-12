@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weather_app/components/error_handler.dart';
 import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/features/chat_gpt_weather/domain/repositories/open_ai_repository.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'package:weather_app/injection_container.dart';
-import '../../../../../components/error_handler.dart';
 import '../../../../../components/reuseable_text.dart';
 import '../../../../realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
 class WeatherAI extends StatefulWidget {
-  const WeatherAI({super.key});
+  final GlobalKey scaffoldKey;
+  const WeatherAI({super.key, required this.scaffoldKey});
 
   @override
   State<WeatherAI> createState() => _WeatherAIState();
@@ -37,16 +38,10 @@ class _WeatherAIState extends State<WeatherAI> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SizedBox(
-                    height: 13.sp,
-                  ),
                   Center(
                     child: ReusableText(
                         text: 'AI Suggestions',
                         style: appStyle(33, Colors.white, FontWeight.bold)),
-                  ),
-                  SizedBox(
-                    height: 20.sp,
                   ),
                   ReusableTextWithAutoSize(
                     text:
@@ -58,12 +53,6 @@ class _WeatherAIState extends State<WeatherAI> {
                       Colors.white,
                       FontWeight.normal,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5.sp,
-                  ),
-                  const SizedBox(
-                    height: 22,
                   ),
                   Center(
                     child: TextButton(
@@ -84,8 +73,11 @@ class _WeatherAIState extends State<WeatherAI> {
                           if (chatResponse != null) {
                             setState(() {});
                           }
-                        } catch (e) {
-                          errorHandler(context, null);
+                        } on Exception catch (e) {
+                          final context = widget.scaffoldKey.currentContext;
+                          if (context != null && context.mounted) {
+                            errorHandler(context, null, e);
+                          }
                         }
                       },
                       child: Row(

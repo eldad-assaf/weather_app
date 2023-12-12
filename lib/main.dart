@@ -81,8 +81,15 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final GlobalKey<_HomeState> key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +97,7 @@ class Home extends StatelessWidget {
     return BlocConsumer<RealtimeWeatherBloc, RealtimeWeatherState>(
       listener: (context, state) {
         if (state is RealtimeWeatherError) {
-          errorHandler(context, state);
+          errorHandler(context, state, null);
         }
       },
       builder: (context, state) {
@@ -100,10 +107,11 @@ class Home extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
-     
+
         if (state is RealtimeWeatherDone) {
           return SafeArea(
             child: Scaffold(
+              key: key,
               extendBodyBehindAppBar: true,
               backgroundColor: state.realtimeWeather!.isDay == 1
                   ? Colors.blue
@@ -112,9 +120,11 @@ class Home extends StatelessWidget {
               body: PageView(
                 padEnds: false,
                 controller: controller,
-                children: const <Widget>[
-                  RealtimeWeather(),
-                  WeatherAI(),
+                children: <Widget>[
+                  const RealtimeWeather(),
+                  WeatherAI(
+                    scaffoldKey: key,
+                  ),
                 ],
               ),
             ),
