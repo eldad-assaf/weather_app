@@ -14,8 +14,7 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final errMsg = handleHttpStatus(dioException?.response?.statusCode);
-    final errMsg = handleHttpStatus(null);
+    final errMsg = handleWeatherApiErrors(dioException?.response?.statusCode);
 
     return Scaffold(
         extendBodyBehindAppBar: true,

@@ -8,10 +8,10 @@ import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_event.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
-
 class GetWeatherFloatingActionButton extends StatelessWidget {
   final LatLng middleOfTheMap;
-  const GetWeatherFloatingActionButton(BuildContext context, {super.key , required this.middleOfTheMap});
+  const GetWeatherFloatingActionButton(BuildContext context,
+      {super.key, required this.middleOfTheMap});
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +36,11 @@ class GetWeatherFloatingActionButton extends StatelessWidget {
                       realtimeWeather: state.realtimeWeather!,
                     );
                   } else {
+                    print('e');
+                    print(state.error!.response!.statusCode);
                     return Container(
                       height: 550.sp,
-                      color: Colors.red,
+                      color: Colors.blue,
                     );
                   }
                 },

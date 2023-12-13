@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_state.dart';
 
-String setErrorMsg(RealtimeWeatherError? realtimeWeatherError) {
-  String errMsg = 'Something went wrong, try again later';
-  if (realtimeWeatherError != null) {
-    if (realtimeWeatherError.error != null &&
-        realtimeWeatherError.error!.response != null) {
-      errMsg = realtimeWeatherError.error!.response!.data['error']['message'];
-    } else {
-      return errMsg;
-    }
-  }
 
-  return errMsg;
-}
+//**Deprecated */
+// String setErrorMsg(RealtimeWeatherError? realtimeWeatherError) {
+//   String errMsg = 'Something went wrong, try again later';
+//   if (realtimeWeatherError != null) {
+//     if (realtimeWeatherError.error != null &&
+//         realtimeWeatherError.error!.response != null) {
+//       errMsg = realtimeWeatherError.error!.response!.data['error']['message'];
+//     } else {
+//       return errMsg;
+//     }
+//   }
+
+//   return errMsg;
+// }
 
 Widget getWeatherIcon(int code) {
   switch (code) {
@@ -47,7 +48,7 @@ Widget getWeatherIcon(int code) {
   }
 }
 
-String handleHttpStatus(int? httpStatusCode) {
+String handleWeatherApiErrors(int? httpStatusCode) {
   String errMsg;
   switch (httpStatusCode) {
     case null:
@@ -64,6 +65,52 @@ String handleHttpStatus(int? httpStatusCode) {
       break;
     default:
       errMsg = "Unhandled HTTP Status Code: $httpStatusCode";
+  }
+  return errMsg;
+}
+
+String handleChatGPTApiErrors(int? httpStatusCode) {
+  String errMsg;
+
+  switch (httpStatusCode) {
+    case 1002:
+      errMsg = "API key not provided.";
+      break;
+    case 1003:
+      errMsg = "Parameter not provided.";
+      break;
+    case 1005:
+      errMsg = "API request URL is invalid.";
+      break;
+    case 1006:
+      errMsg = "No location found matching parameter.";
+      break;
+    case 2006:
+      errMsg = "API key provided is invalid.";
+      break;
+    case 2007:
+      errMsg = "API key has exceeded calls per month quota.";
+      break;
+    case 2008:
+      errMsg = "API key has been disabled.";
+      break;
+    case 2009:
+      errMsg =
+          "API key does not have access to the resource. Please check pricing page for what is allowed in your API subscription plan.";
+      break;
+    case 9000:
+      errMsg =
+          "Json body passed in bulk request is invalid. Please make sure it is valid JSON with utf-8 encoding.";
+      break;
+    case 9001:
+      errMsg =
+          "Json body contains too many locations for bulk request. Please keep it below 50 in a single request.";
+      break;
+    case 9999:
+      errMsg = "Internal application error.";
+      break;
+    default:
+      errMsg = "Unhandled API error with code $httpStatusCode";
   }
   return errMsg;
 }

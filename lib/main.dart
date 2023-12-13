@@ -130,7 +130,6 @@ class _HomeState extends State<Home> {
             ),
           );
         } else {
-          print(state.error);
           return ErrorScreen(dioException: state.error!);
         }
       },

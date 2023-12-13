@@ -6,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:weather_app/components/reuseable_text.dart';
+import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/core/extensions/extension_methods.dart';
+import 'package:weather_app/core/helpers/helpers_methods.dart';
 import 'package:weather_app/features/map_view/presentation/bloc/camera_position_bloc.dart';
 import 'package:weather_app/features/map_view/presentation/widgets/weather_modal_sheet.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
@@ -117,9 +120,44 @@ class MapViewState extends State<MapView> {
                       realtimeWeather: state.realtimeWeather!,
                     );
                   } else {
+                    // print(state.toString());
+                    // print('${state.error!.error}');
+                    // print('${state.error!.message}');
+                    // print('${state.error!.type}');
+                    // print('${state.error!.response!.statusCode}'); //400
+                    print(
+                        '${state.error!.response!.data['error']['code']}'); //1006
+
+                    print(
+                        '${state.error!.response!.data['error']['message']}'); //No matching location found.
+                    // print(state.error!.response!.toString());
+
+                    // print('${state.error!.response!.statusMessage}');
+                    final errorMsg = handleChatGPTApiErrors(
+                        state.error?.response?.data['error']['code']);
                     return Container(
                       height: 550.sp,
                       color: Colors.red,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            ReusableTextWithAutoSize(
+                                text: errorMsg,
+                                maxLines: 2,
+                                minFontSize: 15,
+                                style: appStyle(
+                                    15, Colors.white, FontWeight.bold)),
+                            ReusableTextWithAutoSize(
+                                text: 'text',
+                                maxLines: 2,
+                                minFontSize: 18,
+                                style: appStyle(
+                                    18, Colors.white, FontWeight.bold)),
+                          ],
+                        ),
+                      ),
                     );
                   }
                 },
