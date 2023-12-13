@@ -15,7 +15,7 @@ import 'package:weather_app/features/realtime_weather/presentation/pages/error_s
 import 'package:weather_app/injection_container.dart';
 import 'features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 import 'features/realtime_weather/presentation/pages/home/realtime_weather.dart';
-
+//
 void main() async {
   //**The .env file is in gitignore , you will have to create your own openAI key. */
   //**ONCE THE KEY IS UPLOADED TO GIT IT IS BLOCKED AUTOMATICALLY  */
