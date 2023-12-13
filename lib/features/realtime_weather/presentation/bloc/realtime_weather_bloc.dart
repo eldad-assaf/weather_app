@@ -12,6 +12,12 @@ class RealtimeWeatherBloc
   RealtimeWeatherBloc(this._realtimeWeatherUseCase)
       : super(const RealtimeWeatherInitial()) {
     on<FetchRealtimeWeatherEvent>(onFetchRealtimeWeather);
+    on<ResetToInitialState>(onResetToInitialState);
+  }
+
+  void onResetToInitialState(
+      ResetToInitialState event, Emitter<RealtimeWeatherState> emit) {
+    emit(const RealtimeWeatherInitial());
   }
 
   void onFetchRealtimeWeather(FetchRealtimeWeatherEvent event,

@@ -24,6 +24,7 @@ class OpenAIRepositoryImpl extends OpenAIRepository {
       }
     } catch (e) {
       print('getWeatherExplanationFromChatGpt error :  ${e.toString()}');
+      rethrow;
     }
     return null;
   }
@@ -40,16 +41,3 @@ class OpenAIRepositoryImpl extends OpenAIRepository {
 }
 
 
-// final String? loactionName;
-//   final double? tempC;
-//   final double? tempF;
-//   final int? isDay;
-//   final String? conditionText;
-//   final String? conditionIcon;
-//   final int? conditionCode;
-//   final String? localTime;
-//   final String? lastUpdated;
-//   final double? windMph;
-//   final double? windKph;
-//   final int? cloud;
-//   final double? uv;

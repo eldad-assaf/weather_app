@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:weather_app/components/error_handler.dart';
 import 'package:weather_app/components/text_style.dart';
 import 'package:weather_app/config/theme/app_background.dart';
+import 'package:weather_app/core/helpers/helpers_methods.dart';
 import 'package:weather_app/features/realtime_weather/presentation/bloc/realtime_weather_bloc.dart';
 
 import '../../../../../components/reuseable_text.dart';
@@ -16,9 +16,7 @@ class RealtimeWeather extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<RealtimeWeatherBloc, RealtimeWeatherState>(
       listener: (context, state) {
-        if (state is RealtimeWeatherError) {
-          errorHandler(context, state);
-        }
+        //TODO: remove the listener? errors are already handled
       },
       child: BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
         builder: (context, state) {
@@ -32,7 +30,6 @@ class RealtimeWeather extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
                   children: [
-                    //  buildAppBackground(),
                     BackGround(
                       isDay: state.realtimeWeather!.isDay!,
                     ),
@@ -42,7 +39,9 @@ class RealtimeWeather extends StatelessWidget {
                         padding: EdgeInsets.only(top: 30.sp),
                         child: Column(
                           children: [
-                            ReusableText(
+                            ReusableTextWithAutoSize(
+                              maxLines: 2,
+                              minFontSize: 18,
                               style: appStyle(
                                 45,
                                 Colors.white,
@@ -118,37 +117,5 @@ class RealtimeWeather extends StatelessWidget {
         },
       ),
     );
-  }
-
-  Widget getWeatherIcon(int code) {
-    switch (code) {
-      case == 1000: //suuny
-        return Image.asset('assets/6.png');
-      case == 1003: // partly cloudy
-        return Image.asset('assets/7.png');
-      case >= 1006: // cloudy
-        return Image.asset('assets/8.png');
-      case >= 1009: // overcast
-        return Image.asset('assets/8.png');
-      case >= 1030: //mist
-        return Image.asset('assets/5.png');
-      case == 1063: // Patchy rain possible
-        return Image.asset('assets/2.png');
-      case == 1066: //Patchy snow possible
-        return Image.asset('assets/4.png');
-      case == 1069: //Patchy snow possible
-        return Image.asset('assets/4.png');
-      case == 1072: //Patchy freezing drizzle possible
-        return Image.asset('assets/4.png');
-      case == 1087: //Thundery outbreaks possible
-        return Image.asset('assets/1.png');
-      case == 1087: //Thundery outbreaks possible
-        return Image.asset('assets/1.png');
-
-      default:
-        return Image.asset(
-          'assets/14.png',
-        );
-    }
   }
 }

@@ -1,4 +1,3 @@
-
 abstract class RealtimeWeatherEvent {
   final String? position; // keep it a String (Not a Position)
 
@@ -6,6 +5,9 @@ abstract class RealtimeWeatherEvent {
 }
 
 class FetchRealtimeWeatherEvent extends RealtimeWeatherEvent {
-  const FetchRealtimeWeatherEvent(String? position)
-      : super(position: position);
+  const FetchRealtimeWeatherEvent(String? position) : super(position: position);
+}
+
+class ResetToInitialState extends RealtimeWeatherEvent {
+  const ResetToInitialState() : super();
 }

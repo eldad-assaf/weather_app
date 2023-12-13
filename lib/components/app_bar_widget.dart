@@ -19,7 +19,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     super.key,
   });
   @override
-  Size get preferredSize => Size(56, AppBar().preferredSize.height);
+  Size get preferredSize => Size(56.sp, AppBar().preferredSize.height);
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +32,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       title: ReusableText(
           text: 'Weather', style: appStyle(18, Colors.white, FontWeight.w300)),
       actions: [
-        //**FOR TESTING SHAREDPREFS DATA */
-        // IconButton(
-        //     color: Colors.red,
-        //     onPressed: () async {
-        //       SharedPreferences sf = await SharedPreferences.getInstance();
-        //       await sf.clear();
-        //     },
-        //     icon: const Icon(Icons.delete)),
         BlocListener<DevicePositionBloc, DevicePositionState>(
           listener: (context, state) {
             if (state is DevicePositionDone) {
+              //**When  the state is DevicePositionDone it means the device's position is available  */
+              //**the weather is being fetched for the position */
               BlocProvider.of<RealtimeWeatherBloc>(context)
                   .add(FetchRealtimeWeatherEvent(state.position!.asString()));
             }
@@ -91,21 +85,23 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   padding: EdgeInsets.only(right: 15),
                   child: CircularProgressIndicator(),
                 );
-              }
-              return InkWell(
-                onTap: () {
-                  BlocProvider.of<DevicePositionBloc>(context)
-                      .add(const DeterminePositionEvent());
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: FaIcon(
-                    FontAwesomeIcons.locationArrow,
-                    size: 33.sp,
-                    color: Colors.white,
+              } else {
+                //**Dont care about error states or permissions/locationService*/ in those cases the icon should still be visiable
+                return InkWell(
+                  onTap: () {
+                    BlocProvider.of<DevicePositionBloc>(context)
+                        .add(const DeterminePositionEvent());
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: FaIcon(
+                      FontAwesomeIcons.locationArrow,
+                      size: 33.sp,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             },
           ),
         ),

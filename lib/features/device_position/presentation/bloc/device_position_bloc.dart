@@ -14,7 +14,7 @@ class DevicePositionBloc
 
   DevicePositionBloc(
     this._determinePositionUseCase,
-  ) : super(DeviceLocationInitial()) {
+  ) : super(DevicePositionInitial()) {
     on<DeterminePositionEvent>(onDeterminePosition);
   }
 
@@ -45,7 +45,7 @@ class DevicePositionBloc
         emit(const DeviceLocationPermissionsDeniedForever(
             'Location permissions are permanently denied, we cannot request permissions.'));
       } else {
-        emit(DeviceLocationError(e));
+        emit(DevicePositionError(e));
       }
     }
   }

@@ -9,7 +9,7 @@ abstract class DevicePositionState extends Equatable {
   List<Object?> get props => [position, error];
 }
 
-final class DeviceLocationInitial extends DevicePositionState {}
+final class DevicePositionInitial extends DevicePositionState {}
 
 class DevicePositionLoading extends DevicePositionState {
   const DevicePositionLoading();
@@ -32,6 +32,6 @@ class DeviceLocationPermissionsDenied extends DevicePositionState {
   const DeviceLocationPermissionsDenied(Object error) : super(error: error);
 }
 
-class DeviceLocationError extends DevicePositionState {
-  const DeviceLocationError(Object error) : super(error: error);
+class DevicePositionError extends DevicePositionState {
+  const DevicePositionError(Object error) : super(error: error);
 }
