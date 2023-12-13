@@ -139,24 +139,11 @@ class MapViewState extends State<MapView> {
                       height: 550.sp,
                       color: Colors.red,
                       child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            ReusableTextWithAutoSize(
-                                text: errorMsg,
-                                maxLines: 2,
-                                minFontSize: 15,
-                                style: appStyle(
-                                    15, Colors.white, FontWeight.bold)),
-                            ReusableTextWithAutoSize(
-                                text: 'text',
-                                maxLines: 2,
-                                minFontSize: 18,
-                                style: appStyle(
-                                    18, Colors.white, FontWeight.bold)),
-                          ],
-                        ),
+                        child: ReusableTextWithAutoSize(
+                            text: errorMsg,
+                            maxLines: 2,
+                            minFontSize: 15,
+                            style: appStyle(15, Colors.white, FontWeight.bold)),
                       ),
                     );
                   }
