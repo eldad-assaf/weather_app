@@ -36,8 +36,6 @@ class GetWeatherFloatingActionButton extends StatelessWidget {
                       realtimeWeather: state.realtimeWeather!,
                     );
                   } else {
-                    print('e');
-                    print(state.error!.response!.statusCode);
                     return Container(
                       height: 550.sp,
                       color: Colors.blue,

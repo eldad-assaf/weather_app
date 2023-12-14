@@ -14,108 +14,103 @@ class RealtimeWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RealtimeWeatherBloc, RealtimeWeatherState>(
-      listener: (context, state) {
-        //TODO: remove the listener? errors are already handled
-      },
-      child: BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
-        builder: (context, state) {
-          if (state is RealtimeWeatherLoading ||
-              state is RealtimeWeatherInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is RealtimeWeatherDone) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 1.8 * kToolbarHeight),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                  children: [
-                    BackGround(
-                      isDay: state.realtimeWeather!.isDay!,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30.sp),
-                        child: Column(
-                          children: [
-                            ReusableTextWithAutoSize(
-                              maxLines: 2,
-                              minFontSize: 18,
-                              style: appStyle(
-                                45,
-                                Colors.white,
-                                FontWeight.bold,
-                              ),
-                              text: state.realtimeWeather?.loactionName ?? '',
+    return BlocBuilder<RealtimeWeatherBloc, RealtimeWeatherState>(
+      builder: (context, state) {
+        if (state is RealtimeWeatherLoading ||
+            state is RealtimeWeatherInitial) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is RealtimeWeatherDone) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 1.8 * kToolbarHeight),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  BackGround(
+                    isDay: state.realtimeWeather!.isDay!,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 30.sp),
+                      child: Column(
+                        children: [
+                          ReusableTextWithAutoSize(
+                            maxLines: 2,
+                            minFontSize: 18,
+                            style: appStyle(
+                              45,
+                              Colors.white,
+                              FontWeight.bold,
                             ),
-                            ReusableText(
-                              style: appStyle(
-                                25,
-                                Colors.white,
-                                FontWeight.w300,
-                              ),
-                              text: "Now",
+                            text: state.realtimeWeather?.loactionName ?? '',
+                          ),
+                          ReusableText(
+                            style: appStyle(
+                              25,
+                              Colors.white,
+                              FontWeight.w300,
                             ),
-                            SizedBox(
-                              height: 50.sp,
+                            text: "Now",
+                          ),
+                          SizedBox(
+                            height: 50.sp,
+                          ),
+                          ReusableText(
+                            style: appStyle(
+                              70,
+                              Colors.white,
+                              FontWeight.bold,
                             ),
-                            ReusableText(
-                              style: appStyle(
-                                70,
-                                Colors.white,
-                                FontWeight.bold,
-                              ),
-                              text: "${state.realtimeWeather?.tempC}C",
+                            text: "${state.realtimeWeather?.tempC}C",
+                          ),
+                          SizedBox(width: 222.sp, child: const Divider()),
+                          SizedBox(
+                            height: 50.sp,
+                          ),
+                          ReusableTextWithAutoSize(
+                            maxLines: 1,
+                            minFontSize: 15,
+                            style: appStyle(
+                              30,
+                              Colors.white,
+                              FontWeight.normal,
                             ),
-                            SizedBox(width: 222.sp, child: const Divider()),
-                            SizedBox(
-                              height: 50.sp,
-                            ),
-                            ReusableTextWithAutoSize(
-                              maxLines: 1,
-                              minFontSize: 15,
-                              style: appStyle(
-                                30,
-                                Colors.white,
-                                FontWeight.normal,
-                              ),
-                              text: state.realtimeWeather?.conditionText ?? '',
-                            ),
-                            SizedBox(
-                              height: 20.sp,
-                            ),
-                            SizedBox(
-                                width: 100.sp,
-                                height: 100.sp,
-                                child: getWeatherIcon(
-                                    state.realtimeWeather!.conditionCode!)),
-                          ],
-                        ),
+                            text: state.realtimeWeather?.conditionText ?? '',
+                          ),
+                          SizedBox(
+                            height: 20.sp,
+                          ),
+                          SizedBox(
+                              width: 100.sp,
+                              height: 100.sp,
+                              child: getWeatherIcon(
+                                  state.realtimeWeather!.conditionCode!)),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: 50.sp, right: 13.sp, left: 13.sp),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: ReusableTextWithAutoSize(
-                          text: 'swipe to see AI recommendations ',
-                          maxLines: 1,
-                          minFontSize: 14,
-                          style: appStyle(16, Colors.amber, FontWeight.bold),
-                        ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: 50.sp, right: 13.sp, left: 13.sp),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ReusableTextWithAutoSize(
+                        text: 'swipe to see AI recommendations ',
+                        maxLines: 1,
+                        minFontSize: 14,
+                        style: appStyle(16, Colors.amber, FontWeight.bold),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
-            );
-          } else {
-            return Container();
-          }
-        },
-      ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }

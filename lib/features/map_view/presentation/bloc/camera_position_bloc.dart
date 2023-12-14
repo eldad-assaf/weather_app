@@ -42,10 +42,7 @@ class CameraPositionBloc
   ) async {
     try {
       await _saveLastCameraPositionToSfUseCase(params: event.latLng);
-//TODO: should emit error state or not? its just saves to sf .
-      //emit(CameraPositionDone(cameraPosition));
     } catch (e) {
-      //emit(CameraPositionError(e));
       print(e.toString());
     }
   }
