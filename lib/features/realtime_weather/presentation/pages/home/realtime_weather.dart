@@ -103,7 +103,7 @@ class RealtimeWeather extends StatelessWidget {
                           text: 'swipe to see AI recommendations ',
                           maxLines: 1,
                           minFontSize: 14,
-                          style: appStyle(22, Colors.amber, FontWeight.bold),
+                          style: appStyle(16, Colors.amber, FontWeight.bold),
                         ),
                       ),
                     )
