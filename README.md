@@ -53,3 +53,11 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 Enjoy using the WeatherApp! If you have any questions or encounter issues, please don't hesitate to reach out. Happy coding!
+
+<p float="left">
+  <img src="images/main.png" alt="" width="300" />
+  <img src="images/ai.png" alt="" width="300" />
+  <img src="images/map.png" alt="" width="300" />
+  <img src="images/map2.png" alt="" width="300" />
+
+</p>
